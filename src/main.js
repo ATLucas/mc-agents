@@ -4,7 +4,7 @@ const mineflayer = require('mineflayer');
 const { pathfinder, Movements } = require('mineflayer-pathfinder');
 
 const { botConfig, worldBotUsername } = require('./config.js');
-const { createGPTAssistant, deleteGPTAssistant, performGPTCommand } = require('./gpt.js');
+const { createGPTAssistant, deleteGPTAssistant, resetGPTThread, performGPTCommand } = require('./gpt.js');
 const { skillFunctions } = require('./skills.js');
 const { getBotData } = require('./skills/bots/getBotData.js');
 const { setSpawn } = require('./skills/bots/setSpawn.js');
@@ -22,7 +22,7 @@ async function createBot(botConfig) {
             try {
                 await onBotSpawn(bot);
             } catch (error) {
-                await handleError(error);
+                console.error(error.message, error.stack);
             }
         });
 
@@ -30,13 +30,13 @@ async function createBot(botConfig) {
             try {
                 await onBotChat(bot, username, message);
             } catch (error) {
-                await handleError(error);
+                console.error(error.message, error.stack);
             }
         });
 
         return bot;
     } catch (error) {
-        await handleError(error);
+        console.error(error.message, error.stack);
     }
 }
 
@@ -82,9 +82,7 @@ async function onBotSpawn(bot) {
         return;
     }
 
-    // Create a GPT for this bot
-    await createGPTAssistant(bot);
-
+    await createGPTAssistant(bot, result.botData);
     await teleportToWaypoint(bot, result.botData.spawnWaypoint);
 }
 
@@ -130,6 +128,11 @@ async function onBotChat(bot, username, message) {
         bot.chat("Thinking...");
         const response = await performGPTCommand(bot, command);
         bot.chat(response);
+
+        // World bot does not track context
+        if (isWorldBot(bot)) {
+            await resetGPTThread(bot);
+        }
     }
 }
 
@@ -137,10 +140,12 @@ async function performCommand(bot, command) {
 
     if (command.startsWith('/reset')) {
 
-        if (bot.gptAssistant) {
-            await deleteGPTAssistant(bot);
-        }
-        await createGPTAssistant(bot);
+        await resetGPTThread(bot);
+        return;
+
+    } else if (command.startsWith('/delete')) {
+
+        await deleteGPTAssistant(bot);
         return;
     }
 
@@ -179,27 +184,6 @@ async function performCommand(bot, command) {
         console.log(`INFO: No matching skill found for command: ${command}`);
     }
 }
-
-async function handleError(error) {
-    console.error(error.stack);
-    await cleanupBots();
-    process.exit(1);
-}
-
-async function cleanupBots() {
-    console.log('INFO: Cleaning up GPTs before exiting');
-
-    const deletePromises = Object.keys(botRegistry).map(botName => deleteGPTAssistant(botRegistry[botName]));
-    await Promise.all(deletePromises);
-
-    console.log('INFO: Cleanup complete');
-}
-
-// Modify the SIGINT handler to call cleanupBots
-process.on('SIGINT', async () => {
-    await cleanupBots();
-    process.exit();
-});
 
 // Spawn the world bot
 (async () => {

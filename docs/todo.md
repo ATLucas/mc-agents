@@ -1,7 +1,5 @@
 
 - Bot data
-    - Save GPT assistant and thread IDs in bot data for persistence across runs
-        - Remove code to delete the GPT stuff on shutdown
     - Split main.js into files
     - When programs start-up, spawn in all the bots to their spawn points
 
@@ -20,10 +18,10 @@
     - Choose available skills based on bot type
     - Really need skins for each type of bot
 
-- World bot
-    - spawn skills
-    - waypoint skills
-    - Skill to teleport player to a given waypoint?
+    - World bot
+        - spawn skills
+        - waypoint skills
+        - Skill to teleport player to a given waypoint?
 
 - Bugs in block placement for the leveling
     - Need some way to get closer to the placement square, like go look at the reference block face
