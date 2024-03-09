@@ -6,10 +6,7 @@ const { setSpawn } = require('./botData/setSpawn.js');
 const { wipeBotMemory } = require('./botData/wipeBotMemory.js');
 
 // botSpawn
-async function spawnBot(_, botName) {
-    const { spawnBot } = require('./botSpawn/spawnBot.js');
-    await spawnBot(_, botName, skillFunctions);
-}
+const { spawnBot } = require('./botSpawn/spawnBot.js');
 const { despawnBot } = require('./botSpawn/despawnBot.js');
 const { deleteBot } = require('./botSpawn/deleteBot.js');
 
@@ -40,6 +37,10 @@ const { delWaypoint } = require('./waypoints/delWaypoint.js');
 const { getWaypoint } = require('./waypoints/getWaypoint.js');
 const { listWaypoints } = require('./waypoints/listWaypoints.js');
 
+async function spawnBotWrapper(_, botName) {
+    await spawnBot(_, botName, skillFunctions);
+}
+
 const skillFunctions = {
     // botData
     getBotData,
@@ -47,7 +48,7 @@ const skillFunctions = {
     wipeBotMemory,
 
     // botSpawn
-    spawnBot,
+    "spawnBot": spawnBotWrapper,
     despawnBot,
     deleteBot,
 
