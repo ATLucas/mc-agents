@@ -58,7 +58,7 @@ async function setWaypoint(bot, waypointType, waypointName) {
     fs.writeFileSync(waypointsFilePath, JSON.stringify(waypoints, null, 2), { encoding: 'utf8' });
 
     console.log(`INFO: Waypoint '${waypointName}' of type '${waypointType}' created.`);
-    return returnSkillSuccess({ created: {waypointName, ...newWaypoint} });
+    return returnSkillSuccess();
 }
 
 module.exports = {

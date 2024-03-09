@@ -1,5 +1,9 @@
 // skills.js located in ./
 
+// bots
+const { getBotData } = require('./skills/bots/getBotData.js');
+const { setSpawn } = require('./skills/bots/setSpawn.js');
+
 // building
 const { levelTerrain } = require('./skills/building/levelTerrain.js');
 
@@ -28,6 +32,10 @@ const { getWaypoint } = require('./skills/waypoints/getWaypoint.js');
 const { listWaypoints } = require('./skills/waypoints/listWaypoints.js');
 
 const skillFunctions = {
+    // bots
+    getBotData,
+    setSpawn,
+
     // building
     levelTerrain,
 

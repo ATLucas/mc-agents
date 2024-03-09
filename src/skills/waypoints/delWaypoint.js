@@ -36,7 +36,7 @@ async function delWaypoint(bot, waypointName) {
     // Save the updated waypoints back to the file
     fs.writeFileSync(waypointsFilePath, JSON.stringify(waypoints, null, 2), { encoding: 'utf8' });
 
-    return returnSkillSuccess({ deleted: {waypointName, ...waypointData} });
+    return returnSkillSuccess();
 }
 
 module.exports = {
