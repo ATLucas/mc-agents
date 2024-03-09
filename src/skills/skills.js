@@ -4,9 +4,6 @@
 const { getBotData } = require('./bots/getBotData.js');
 const { setSpawn } = require('./bots/setSpawn.js');
 
-// building
-const { levelTerrain } = require('./building/levelTerrain.js');
-
 // crafting
 const { craftCraftingTable } = require('./crafting/craftCraftingTable.js');
 const { craftPlanks } = require('./crafting/craftPlanks.js');
@@ -25,6 +22,9 @@ const { harvestTree } = require('./mining/harvestTree.js');
 const { come } = require('./navigation/come.js');
 const { teleportToWaypoint } = require('./navigation/teleportToWaypoint.js');
 
+// terraforming
+const { levelTerrain } = require('./terraforming/levelTerrain.js');
+
 // waypoints
 const { setWaypoint } = require('./waypoints/setWaypoint.js');
 const { delWaypoint } = require('./waypoints/delWaypoint.js');
@@ -35,9 +35,6 @@ const skillFunctions = {
     // bots
     getBotData,
     setSpawn,
-
-    // building
-    levelTerrain,
 
     // crafting
     craftCraftingTable,
@@ -56,6 +53,9 @@ const skillFunctions = {
     // navigation
     come,
     teleportToWaypoint,
+
+    // terraforming
+    levelTerrain,
 
     // waypoints
     setWaypoint,
