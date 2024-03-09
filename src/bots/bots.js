@@ -1,11 +1,44 @@
 // bots.js located in ./bots
 
+const fs = require('fs');
+const path = require('path');
 const mineflayer = require('mineflayer');
-const { botConfig } = require('../config.js');
+const { botConfig, worldBotUsername } = require('../config.js');
 
 const botRegistry = {};
 
-// TODO: async function spawnAllBots(onBotSpawn, onBotChat) // NOTE: If none exist, spawn the world bot
+function getBot(botName) {
+    return botRegistry[botName];
+}
+
+async function spawnAllBots(onBotSpawn, onBotChat) {
+
+    const botsDataDir = path.join(__dirname, '../data/bots');
+
+    try {
+        const files = fs.readdirSync(botsDataDir);
+        const jsonFiles = files.filter(file => file.endsWith('.json'));
+
+        if (jsonFiles.length === 0) {
+            // If no JSON files are found, spawn the world bot
+            await spawnBot(worldBotUsername, onBotSpawn, onBotChat);
+            return;
+        }
+
+        for (const file of jsonFiles) {
+            const botName = path.basename(file, '.json');
+            await spawnBot(botName, onBotSpawn, onBotChat);
+        }
+    } catch (error) {
+        if (error.code === 'ENOENT') {
+            // Directory not found, spawn world bot
+            await spawnBot(worldBotUsername, onBotSpawn, onBotChat);
+        } else {
+            // Log other errors
+            console.error(error.message, error.stack);
+        }
+    }
+}
 
 async function spawnBot(botName, onBotSpawn, onBotChat) {
     try {
@@ -33,15 +66,12 @@ async function spawnBot(botName, onBotSpawn, onBotChat) {
     }
 }
 
-function getBot(botName) {
-    return botRegistry[botName];
-}
-
 // TODO: async function despawnBot(botName)
 
 // TODO: async function deleteBot(botName)
 
 module.exports = {
-    spawnBot,
     getBot,
+    spawnAllBots,
+    spawnBot,
 };

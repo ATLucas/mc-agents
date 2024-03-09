@@ -1,6 +1,5 @@
 
 - Bot data
-    - When programs start-up, spawn in all the bots to their spawn points
     - Provide option to de-spawn a bot (optionally also delete its GPT)
 
 - Bot types
