@@ -1,7 +1,7 @@
 // come.js located in ./skills/navigation
 
 const { goNear } = require('./goNear.js');
-const { getPlayer, returnSkillError } = require('../../utils.js');
+const { getPlayer, returnSkillError } = require('../../utils/utils.js');
 
 async function come(bot) {
     const player = getPlayer(bot);

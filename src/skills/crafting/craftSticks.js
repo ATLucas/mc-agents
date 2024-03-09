@@ -1,6 +1,6 @@
 // craftSticks.js located in ./skills/crafting
 
-const { returnSkillError } = require('../../utils.js');
+const { returnSkillError } = require('../../utils/utils.js');
 
 const STICKS_PER_SET = 4;
 const REQUIRED_PLANKS = 2;

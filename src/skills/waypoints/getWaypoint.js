@@ -1,7 +1,7 @@
 // getWaypoint.js located in ./skills/waypoints
 
 const path = require('path');
-const { returnSkillError, returnSkillSuccess, readJsonFile } = require('../../utils.js');
+const { returnSkillError, returnSkillSuccess, readJsonFile } = require('../../utils/utils.js');
 
 const waypointsFilePath = path.join(__dirname, '..', '..', 'data', 'waypoints.json');
 

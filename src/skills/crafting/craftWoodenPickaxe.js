@@ -1,7 +1,7 @@
 // craftWoodenPickaxe.js located in ./skills/crafting
 
 const { goNear } = require('../navigation/goNear.js');
-const { returnSkillError } = require('../../utils.js');
+const { returnSkillError } = require('../../utils/utils.js');
 
 const REQUIRED_PLANKS = 3;
 const REQUIRED_STICKS = 2;

@@ -4,9 +4,9 @@ const { digBlock } = require('./digBlock.js');
 const { goNear } = require('../navigation/goNear.js');
 const { goTo } = require('../navigation/goTo.js');
 const { queryInventory } = require('../inventory/queryInventory.js');
-const { sleep } = require('../../utils.js');
+const { sleep } = require('../../utils/utils.js');
 const Vec3 = require('vec3');
-const { returnSkillError } = require('../../utils.js');
+const { returnSkillError } = require('../../utils/utils.js');
 
 async function harvestGrass(bot, radius=4) {
     // Scan for grass blocks within the radius

@@ -1,6 +1,6 @@
 // queryInventory.js located in ./skills/inventory
 
-const { returnSkillSuccess } = require('../../utils.js');
+const { returnSkillSuccess } = require('../../utils/utils.js');
 
 function queryInventory(bot) {
     // Initialize an object to hold the summary

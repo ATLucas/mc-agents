@@ -1,6 +1,6 @@
 // chat.js located in ./bots
 
-const { isAlphanumeric, isWorldBot } = require('../utils.js');
+const { isAlphanumeric, isWorldBot } = require('../utils/utils.js');
 const { spawnBot, getBot } = require('./bots.js');
 const { performSlashCommand } = require('./commands.js');
 const { resetGPTThread, performGPTCommand } = require('./gpt.js');

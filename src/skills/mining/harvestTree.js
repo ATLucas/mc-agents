@@ -4,8 +4,8 @@ const { digBlock } = require('./digBlock.js');
 const { goNear } = require('../navigation/goNear.js');
 const { goTo } = require('../navigation/goTo.js');
 const { queryInventory } = require('../inventory/queryInventory.js');
-const { sleep } = require('../../utils.js');
-const { returnSkillError } = require('../../utils.js');
+const { sleep } = require('../../utils/utils.js');
+const { returnSkillError } = require('../../utils/utils.js');
 const Vec3 = require('vec3');
 
 const LOG_BLOCKS = ['oak_log', 'spruce_log', 'birch_log', 'jungle_log', 'acacia_log', 'dark_oak_log'];

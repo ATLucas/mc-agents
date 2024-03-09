@@ -3,8 +3,8 @@
 const fs = require('fs');
 const path = require('path');
 const OpenAI = require('openai');
-const { skillFunctions } = require('../skills.js');
-const { sleep } = require('../utils.js');
+const { skillFunctions } = require('../skills/skills.js');
+const { sleep } = require('../utils/utils.js');
 const { writeBotData } = require('../skills/bots/writeBotData.js');
 
 const openai = new OpenAI();

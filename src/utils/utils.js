@@ -1,8 +1,8 @@
-// utils.js located in ./
+// utils.js located in ./utils
 
 const fs = require('fs');
 const path = require('path');
-const { playerName, worldBotUsername } = require('./config.js');
+const { playerName, worldBotUsername } = require('../config.js');
 
 function getPlayer(bot) {
     return bot.players[playerName]?.entity;

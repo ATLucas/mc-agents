@@ -1,7 +1,7 @@
 // digBlock.js located in ./skills/mining
 
-const { sleep } = require('../../utils.js');
-const { returnSkillError, returnSkillSuccess } = require('../../utils.js');
+const { sleep } = require('../../utils/utils.js');
+const { returnSkillError, returnSkillSuccess } = require('../../utils/utils.js');
 
 async function digBlock(bot, block) {
 

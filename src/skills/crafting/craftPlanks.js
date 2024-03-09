@@ -1,7 +1,7 @@
 // craftPlanks.js located in ./skills/crafting
 
 const { queryInventory } = require('../inventory/queryInventory.js');
-const { returnSkillError } = require('../../utils.js');
+const { returnSkillError } = require('../../utils/utils.js');
 
 const PLANKS_PER_SET = 4;
 const LOG_TO_PLANK = {

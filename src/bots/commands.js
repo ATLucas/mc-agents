@@ -1,7 +1,7 @@
 // commands.js located in ./bots
 
 const { deleteGPTAssistant, resetGPTThread } = require('./gpt.js');
-const { skillFunctions } = require('../skills.js');
+const { skillFunctions } = require('../skills/skills.js');
 
 async function performSlashCommand(bot, command) {
 

@@ -1,7 +1,7 @@
 // goNear.js located in ./skills
 
 const { goals: { GoalNear } } = require('mineflayer-pathfinder');
-const { returnSkillError, returnSkillSuccess } = require('../../utils.js');
+const { returnSkillError, returnSkillSuccess } = require('../../utils/utils.js');
 
 async function goNear(bot, target, range=4) {
 

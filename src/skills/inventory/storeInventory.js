@@ -2,7 +2,7 @@
 
 const { goNear } = require('../navigation/goNear.js');
 const Vec3 = require('vec3');
-const { returnSkillError, returnSkillSuccess } = require('../../utils.js');
+const { returnSkillError, returnSkillSuccess } = require('../../utils/utils.js');
 
 async function storeInventory(bot) {
     // Find the nearest chest within a specified radius

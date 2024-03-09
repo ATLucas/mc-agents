@@ -1,6 +1,6 @@
 // craftCraftingTable.js located in ./skills/crafting
 
-const { returnSkillError, returnSkillSuccess } = require('../../utils.js');
+const { returnSkillError, returnSkillSuccess } = require('../../utils/utils.js');
 
 async function craftCraftingTable(bot) {
     // Check if the bot has the necessary items to craft a crafting table (4 wooden planks)

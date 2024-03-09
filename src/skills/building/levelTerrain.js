@@ -3,9 +3,9 @@
 const { digBlock } = require('../mining/digBlock.js');
 const { goNear } = require('../navigation/goNear.js');
 const { goTo } = require('../navigation/goTo.js');
-const { sleep } = require('../../utils.js');
+const { sleep } = require('../../utils/utils.js');
 const Vec3 = require('vec3');
-const { returnSkillSuccess } = require('../../utils.js');
+const { returnSkillSuccess } = require('../../utils/utils.js');
 
 async function levelTerrain(bot, radius=4) {
     // Save the bot's current position

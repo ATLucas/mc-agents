@@ -2,7 +2,7 @@
 
 const path = require('path');
 const { waypointTypes } = require('../../config.js');
-const { getPlayer, returnSkillError, returnSkillSuccess, readJsonFile, writeJsonFile } = require('../../utils.js');
+const { getPlayer, returnSkillError, returnSkillSuccess, readJsonFile, writeJsonFile } = require('../../utils/utils.js');
 
 const waypointsFilePath = path.join(__dirname, '..', '..', 'data', 'waypoints.json');
 

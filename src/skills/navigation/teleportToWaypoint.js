@@ -1,6 +1,6 @@
 // teleportToWaypoint.js located in ./skills/navigation
 
-const { returnSkillError, returnSkillSuccess } = require('../../utils.js');
+const { returnSkillError, returnSkillSuccess } = require('../../utils/utils.js');
 const { getWaypoint } = require('../waypoints/getWaypoint.js');
 
 async function teleportToWaypoint(bot, waypointName) {

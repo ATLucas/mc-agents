@@ -1,7 +1,7 @@
 // getBotData.js located in ./skills/bots
 
 const path = require('path');
-const { returnSkillError, returnSkillSuccess, fileExists, readJsonFile } = require('../../utils.js');
+const { returnSkillError, returnSkillSuccess, fileExists, readJsonFile } = require('../../utils/utils.js');
 
 async function getBotData(bot) {
     // Define the path for the bot-specific data file

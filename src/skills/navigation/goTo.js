@@ -1,7 +1,7 @@
 // goTo.js located in ./skills
 
 const { goals: { GoalBlock } } = require('mineflayer-pathfinder');
-const { returnSkillError, returnSkillSuccess } = require('../../utils.js');
+const { returnSkillError, returnSkillSuccess } = require('../../utils/utils.js');
 
 async function goTo(bot, target) {
 

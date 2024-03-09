@@ -1,7 +1,7 @@
 // deleteWaypoint.js located in ./skills/waypoints
 
 const path = require('path');
-const { returnSkillError, returnSkillSuccess, readJsonFile, writeJsonFile } = require('../../utils.js');
+const { returnSkillError, returnSkillSuccess, readJsonFile, writeJsonFile } = require('../../utils/utils.js');
 
 const waypointsFilePath = path.join(__dirname, '..', '..', 'data', 'waypoints.json');
 
