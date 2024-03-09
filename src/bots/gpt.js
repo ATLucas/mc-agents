@@ -3,9 +3,8 @@
 const fs = require('fs');
 const path = require('path');
 const OpenAI = require('openai');
-const { skillFunctions } = require('../skills/skills.js');
 const { sleep } = require('../utils/utils.js');
-const { writeBotData } = require('../skills/bots/writeBotData.js');
+const { writeBotData } = require('../skills/botData/writeBotData.js');
 
 const openai = new OpenAI();
 
@@ -103,7 +102,7 @@ async function resetGPTThread(bot) {
     }
 }
 
-async function performGPTCommand(bot, command) {
+async function performGPTCommand(bot, command, skillFunctions) {
 
     const userMessage = await openai.beta.threads.messages.create(
         bot.gptThread, { role: "user", content: command }

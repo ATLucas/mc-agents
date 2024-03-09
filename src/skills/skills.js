@@ -1,8 +1,17 @@
 // skills.js located in ./skills
 
-// bots
-const { getBotData } = require('./bots/getBotData.js');
-const { setSpawn } = require('./bots/setSpawn.js');
+// botData
+const { getBotData } = require('./botData/getBotData.js');
+const { setSpawn } = require('./botData/setSpawn.js');
+const { wipeBotMemory } = require('./botData/wipeBotMemory.js');
+
+// botSpawn
+async function spawnBot(_, botName) {
+    const { spawnBot } = require('./botSpawn/spawnBot.js');
+    await spawnBot(_, botName, skillFunctions);
+}
+const { despawnBot } = require('./botSpawn/despawnBot.js');
+const { deleteBot } = require('./botSpawn/deleteBot.js');
 
 // crafting
 const { craftCraftingTable } = require('./crafting/craftCraftingTable.js');
@@ -32,9 +41,15 @@ const { getWaypoint } = require('./waypoints/getWaypoint.js');
 const { listWaypoints } = require('./waypoints/listWaypoints.js');
 
 const skillFunctions = {
-    // bots
+    // botData
     getBotData,
     setSpawn,
+    wipeBotMemory,
+
+    // botSpawn
+    spawnBot,
+    despawnBot,
+    deleteBot,
 
     // crafting
     craftCraftingTable,

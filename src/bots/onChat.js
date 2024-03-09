@@ -1,20 +1,41 @@
-// commands.js located in ./bots
+// onChat.js located in ./bots
 
-const { deleteGPTAssistant, resetGPTThread } = require('./gpt.js');
-const { skillFunctions } = require('../skills/skills.js');
+const { isWorldBot } = require('../utils/utils.js');
+const { resetGPTThread, performGPTCommand } = require('./gpt.js');
 
-async function performSlashCommand(bot, command) {
+async function onChat(bot, username, message, skillFunctions) {
 
-    if (command.startsWith('/reset')) {
-
-        await resetGPTThread(bot);
-        return;
-
-    } else if (command.startsWith('/delete')) {
-
-        await deleteGPTAssistant(bot);
+    let regex = null;
+    if (message.startsWith("@ ") && isWorldBot(bot)) {
+        regex = new RegExp(`^@`, 'i');
+    } else if(message.toLowerCase().startsWith(`@${bot.username.toLowerCase()}`)) {
+        regex = new RegExp(`^@${bot.username}`, 'i');
+    } else {
+        // Message is not meant for this bot
         return;
     }
+
+    const command = message.replace(regex, '').trim();
+    console.log(`${username}: @${bot.username}: ${command}`);
+
+    // Check for command strings
+    if (command.startsWith('/')) {
+        await performSlashCommand(bot, command, skillFunctions);
+    } else {
+
+        // Send command to GPT
+        bot.chat("Thinking...");
+        const response = await performGPTCommand(bot, command, skillFunctions);
+        bot.chat(response);
+
+        // World bot does not track context
+        if (isWorldBot(bot)) {
+            await resetGPTThread(bot);
+        }
+    }
+}
+
+async function performSlashCommand(bot, command, skillFunctions) {
 
     // Normalize command: remove leading '/' and split by spaces
     const parts = command.slice(1).split(' ');
@@ -53,5 +74,5 @@ async function performSlashCommand(bot, command) {
 }
 
 module.exports = {
-    performSlashCommand,
+    onChat,
 };

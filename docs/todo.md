@@ -1,6 +1,5 @@
 
-- Bot data
-    - Provide option to de-spawn a bot (optionally also delete its GPT)
+- Update the custom GPT assistant with the new code
 
 - Bot types
     - Types

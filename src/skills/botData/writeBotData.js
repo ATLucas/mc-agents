@@ -1,4 +1,4 @@
-// writeBotData.js located in ./skills/bots
+// writeBotData.js located in ./skills/botData
 
 const path = require('path');
 const { returnSkillError, returnSkillSuccess, fileExists, readJsonFile, writeJsonFile } = require('../../utils/utils.js');

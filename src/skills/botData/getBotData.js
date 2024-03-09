@@ -1,4 +1,4 @@
-// getBotData.js located in ./skills/bots
+// getBotData.js located in ./skills/botData
 
 const path = require('path');
 const { returnSkillError, returnSkillSuccess, fileExists, readJsonFile } = require('../../utils/utils.js');

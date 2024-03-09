@@ -1,7 +1,7 @@
-// setSpawn.js located in ./skills/bots
+// setSpawn.js located in ./skills/botData
 
 const { returnSkillError } = require('../../utils/utils.js');
-const { writeBotData } = require('../bots/writeBotData.js');
+const { writeBotData } = require('../botData/writeBotData.js');
 const { getWaypoint } = require('../waypoints/getWaypoint.js');
 
 async function setSpawn(bot, waypointName) {

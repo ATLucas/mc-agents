@@ -1,14 +1,14 @@
-// spawn.js located in ./bots
+// onSpawn.js located in ./bots
 
 const { pathfinder, Movements } = require('mineflayer-pathfinder');
 
 const { createGPTAssistant } = require('./gpt.js');
-const { getBotData } = require('../skills/bots/getBotData.js');
-const { setSpawn } = require('../skills/bots/setSpawn.js');
+const { getBotData } = require('../skills/botData/getBotData.js');
+const { setSpawn } = require('../skills/botData/setSpawn.js');
 const { teleportToWaypoint } = require('../skills/navigation/teleportToWaypoint.js');
 const { setWaypoint } = require('../skills/waypoints/setWaypoint.js');
 
-async function onBotSpawn(bot) {
+async function onSpawn(bot) {
     console.log(`Bot spawned: bot=${bot.username}`);
 
     // Mineflayer setup
@@ -55,5 +55,5 @@ async function onBotSpawn(bot) {
 }
 
 module.exports = {
-    onBotSpawn,
+    onSpawn,
 };
