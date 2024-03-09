@@ -55,7 +55,12 @@ async function levelTerrain(bot, radius=4) {
                     const dirtBlock = bot.inventory.items().find(item => item.name === 'dirt');
                     if (dirtBlock) { // Check if we have dirt to place
                         await bot.equip(dirtBlock, 'hand');
-                        await bot.placeBlock(referenceBlock, Vec3(0, 1, 0)); // Offset because we place against the block below
+                        try {
+                            await goNear(bot, referenceBlock.position);
+                            await bot.placeBlock(referenceBlock, new Vec3(0, 1, 0));
+                        } catch(error) {
+                            console.error(error.message, error.stack);
+                        }
                     }
                 }
             }
