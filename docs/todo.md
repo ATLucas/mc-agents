@@ -1,6 +1,4 @@
 
-- Update the custom GPT assistant with the new code
-
 - Bot types
     - Types
         - world

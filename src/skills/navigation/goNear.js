@@ -1,4 +1,4 @@
-// goNear.js located in ./skills
+// goNear.js located in ./skills/navigation
 
 const { goals: { GoalNear } } = require('mineflayer-pathfinder');
 const { returnSkillError, returnSkillSuccess } = require('../../utils/utils.js');

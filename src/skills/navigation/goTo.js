@@ -1,4 +1,4 @@
-// goTo.js located in ./skills
+// goTo.js located in ./skills/navigation
 
 const { goals: { GoalBlock } } = require('mineflayer-pathfinder');
 const { returnSkillError, returnSkillSuccess } = require('../../utils/utils.js');
