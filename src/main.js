@@ -55,22 +55,26 @@ async function onBotSpawn(bot) {
 
 async function onBotChat(bot, username, message) {
 
-    // Only pay attention to messages directed at this bot
-    if (!message.toLowerCase().startsWith(`@${bot.username.toLowerCase()}`)) {
+    const isWorldBot = bot.username == BOT_CONFIG["username"];
+
+    let regex = null;
+    if (message.startsWith("@ ") && isWorldBot) {
+        regex = new RegExp(`^@`, 'i');
+    } else if(message.toLowerCase().startsWith(`@${bot.username.toLowerCase()}`)) {
+        regex = new RegExp(`^@${bot.username}`, 'i');
+    } else {
+        // Message is not meant for this bot
         return;
     }
 
-    console.log(`@${username}: ${message}`);
-
-    // Remove the direct address
-    const regex = new RegExp(`^@${bot.username}`, 'i');
     const command = message.replace(regex, '').trim();
+    console.log(`${username}: @${bot.username}: ${command}`);
 
     // Check for command strings
     if (command.startsWith('/')) {
 
         // Check for spawn command
-        if (bot.username === BOT_CONFIG["username"] && command.startsWith("/spawn")) {
+        if (isWorldBot && command.startsWith("/spawn")) {
             const [_, botName] = command.split(' ');
             if (botRegistry[botName]) {
                 console.log(`Bot ${botName} already exists.`);
