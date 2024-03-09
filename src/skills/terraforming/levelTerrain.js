@@ -1,4 +1,4 @@
-// levelTerrain.js located in ./skills/building
+// levelTerrain.js located in ./skills/terraforming
 
 const { digBlock } = require('../mining/digBlock.js');
 const { goNear } = require('../navigation/goNear.js');
