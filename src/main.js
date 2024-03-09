@@ -8,7 +8,7 @@ const { spawnBot } = require('./skills/botSpawn/spawnBot.js');
 
 async function spawnAllBots() {
 
-    const botsDataDir = path.join(__dirname, '../data/bots');
+    const botsDataDir = path.join(__dirname, 'data/bots');
 
     try {
         // Read the list of bot data files
