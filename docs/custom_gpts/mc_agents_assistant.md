@@ -52,8 +52,6 @@ Create software that can spawn Minecraft bots into a Minecraft world and perform
 - When developing a new function, you may be provided access to a number of skill functions that may be used to implement the new skill function.
 - Skills should always return an object and include any important information, whether related to success or failure.
 
-Main:
-
 ```javascript
 // main.js located in ./
 
@@ -94,10 +92,14 @@ async function createBot(botConfig) {
 async function onBotSpawn(bot) {
     console.log(`@${bot.username} has spawned.`);
 
-    // Create a GPT for this bot
     await createGPTAssistant(bot);
 
-    // [Excluded] Load pathfinder plugin and teleport bot to start position
+    bot.loadPlugin(pathfinder);
+    const defaultMove = new Movements(bot, require('minecraft-data')(bot.version));
+    bot.pathfinder.setMovements(defaultMove);
+    bot.mcData = require('minecraft-data')(bot.version);
+
+    bot.chat(`/tp ${START_POINT.x} ${START_POINT.y} ${START_POINT.z}`);
 }
 
 async function onBotChat(bot, username, message) {
@@ -118,11 +120,16 @@ async function onBotChat(bot, username, message) {
 
         // Check for spawn command
         if (bot.username === BOT_CONFIG["username"] && command.startsWith("/spawn")) {
-            // [Excluded] Spawn a new bot
+            const [_, botName] = command.split(' ');
+            if (botRegistry[botName]) {
+                console.log(`Bot ${botName} already exists.`);
+                return;
+            }
+            const newBotConfig = { ...BOT_CONFIG, username: botName };
+            botRegistry[botName] = await createBot(newBotConfig);
             return;
         }
 
-        // Process some other command
         await performCommand(bot, command);
     } else {
 
@@ -134,53 +141,37 @@ async function onBotChat(bot, username, message) {
 }
 
 async function performCommand(bot, command) {
-    if (command.startsWith('/create')) {
 
-        if (!gptAssistant) {
-            await createGPTAssistant(bot);
+    if (command.startsWith('/reset')) {
+        // [Excluded] Delete and re-create GPT assistant
+    }
+
+    // Normalize command: remove leading '/' and split by spaces
+    const parts = command.slice(1).split(' ');
+    const commandName = parts[0].toLowerCase();
+    const args = parts.slice(1);
+    
+    // [Excluded] Find the closest matching skill function
+
+    // Execute the matched skill function, if any
+    if (closestMatch) {
+        try {
+            const result = await skillFunctions[closestMatch](bot, ...args.map(arg => isNaN(arg) ? arg : parseInt(arg)));
+        } catch (error) {
+            // Print error
         }
-
-    } else if (command.startsWith('/reset')) {
-
-        if (bot.gptAssistant) {
-            await deleteGPTAssistant(bot);
-        }
-        await createGPTAssistant(bot);
-
-    } else if (command.startsWith('/delete')) {
-
-        await deleteGPTAssistant(bot);
-
-    } else if (command.startsWith('/come')) {
-
-        await skillFunctions["come"](bot);
-
-    } else if (command.startsWith('/inventory')) {
-
-        await skillFunctions["queryInventory"](bot);
-
-    } else if (command.startsWith('/store')) {
-
-        await skillFunctions["storeInventory"](bot);
-
-    } else if (command.startsWith('/harvesttree')) {
-
-        await skillFunctions["harvestTree"](bot);
-
     } else {
-        console.warn(`Unrecognized command: ${command}`);
+        // Print no matching skill found
     }
 }
 
-// [Excluded] Error handling and GPT cleanup 
+// [Excluded] Error handling and cleanup
 
-// Initialize the first bot
+// Initialize the bot
 (async () => {
     botRegistry[BOT_CONFIG["username"]] = await createBot(BOT_CONFIG);
 })();
 ```
-
-Config:
 
 ```javascript
 const MINECRAFT_HOST = "localhost";
@@ -205,16 +196,52 @@ module.exports = {
 };
 ```
 
-Skill Examples:
+```javascript
+// utils.js located in ./
+
+function returnSkillError(errMsg) {
+    return {success: false, error: errMsg};
+}
+
+function returnSkillSuccess(data) {
+    return {success: true, ...data};
+}
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+module.exports = {
+    returnSkillError,
+    returnSkillSuccess,
+    sleep,
+};
+```
 
 ```javascript
 // goNear.js located in ./skills
 
 const { goals: { GoalNear } } = require('mineflayer-pathfinder');
+const { returnSkillError, returnSkillSuccess } = require('../utils.js');
 
-async function goNear(bot, target, range=2) {
-    await bot.pathfinder.goto(new GoalNear(target.x, target.y, target.z, range));
-    return { success: true };
+async function goNear(bot, target, range=4) {
+
+    if (!target) {
+        return returnSkillError(`Target not supplied`);
+    }
+
+    try {
+        const distance = bot.entity.position.distanceTo(target);
+        if (distance <= range) {
+            return returnSkillSuccess();
+        }
+
+        await bot.pathfinder.goto(new GoalNear(target.x, target.y, target.z, range));
+        return returnSkillSuccess();
+    } catch( error ) {
+        console.error(error.stack);
+        return returnSkillError(`Failed to go near location '${target}': ${error.message}`);
+    }
 }
 
 module.exports = {
@@ -225,96 +252,23 @@ module.exports = {
 ```javascript
 // queryInventory.js located in ./skills
 
+const { returnSkillSuccess } = require('../utils.js');
+
 function queryInventory(bot) {
-    // Initialize an object to hold the summary
     const summary = {};
   
-    // Iterate over each item in the bot's inventory
     bot.inventory.items().forEach(item => {
-        // Check if the item type is already in the summary
         if (summary[item.name]) {
-            // If it is, increment the count by the item's count
             summary[item.name] += item.count;
         } else {
-            // If it's not, add it to the summary with its count
             summary[item.name] = item.count;
         }
     });
-  
-    // Log the summary to the console and return
-    console.log(`Inventory: ${JSON.stringify(summary, null, 2)}`);
-    return summary;
+
+    return returnSkillSuccess({ summary });
 }
 
 module.exports = {
     queryInventory
 };
 ```
-
-## Mineflayer API Examples
-
-PrismarineJS/mineflayer/examples/
-│
-├── cli/
-│   └── readline.js
-│
-├── pathfinder/
-│   ├── gps.js
-│
-├── pathfinder/
-│   ├── gps.js
-│
-├── modular_mineflayer/
-│   ├── index.js
-│   └── modules/
-│       └── hello.js
-│
-├── viewer/
-│   ├── README.md
-│   └── viewer.js
-│
-├── ansi.js
-├── anvil.js
-├── armor_stand.js
-├── attack.js
-├── auto-eat.js
-├── auto_totem.js
-├── bee.js
-├── block_entity.js
-├── blockfinder.js
-├── book.js
-├── chat_parsing.js
-├── chatterbox.js
-├── chest.js
-├── collectblock.js
-├── command_block.js
-├── crossbower.js
-├── crystal.js
-├── digger.js
-├── discord.js
-├── echo.js
-├── elytra.js
-├── farmer.js
-├── fisherman.js
-├── graffiti.js
-├── guard.js
-├── inventory.js
-├── jumper.js
-├── looker.js
-├── multiple.js
-├── multiple_from_file.js
-├── perfectShotBow.js
-├── place_entity.js
-├── quitter.js
-├── raycast.js
-├── reconnector.js
-├── repl.js
-├── resourcepack.js
-├── scoreboard.js
-├── session.js
-├── skin_blinker.js
-├── skin_data.js
-├── sleeper.js
-├── tab_complete.js
-├── telegram.js
-└── trader.js

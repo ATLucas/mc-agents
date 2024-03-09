@@ -94,39 +94,49 @@ async function onBotChat(bot, username, message) {
 
 async function performCommand(bot, command) {
 
-    let result = { success: false, error: `Unrecognized command: ${command}` };
-
     if (command.startsWith('/reset')) {
 
         if (bot.gptAssistant) {
             await deleteGPTAssistant(bot);
         }
         await createGPTAssistant(bot);
-
-        result = { success: true };
-
-    } else if (command.startsWith('/come')) {
-
-        result = await skillFunctions["come"](bot);
-
-    } else if (command.startsWith('/inventory')) {
-
-        result = await skillFunctions["queryInventory"](bot);
-
-    } else if (command.startsWith('/store')) {
-
-        result = await skillFunctions["storeInventory"](bot);
-
-    } else if (command.startsWith('/harvesttree')) {
-
-        result = await skillFunctions["harvestTree"](bot);
-
-    } else if (command.startsWith('/craftplanks')) {
-
-        result = await skillFunctions["craftPlanks"](bot);
+        return;
     }
 
-    console.log(`INFO: Command result: ${JSON.stringify(result)}`);
+    // Normalize command: remove leading '/' and split by spaces
+    const parts = command.slice(1).split(' ');
+    const commandName = parts[0].toLowerCase(); // The first part is the command name
+    const args = parts.slice(1); // The rest are arguments
+    
+    // Find the closest matching skill function
+    let closestMatch = null;
+    let closestMatchLength = Infinity;
+
+    for (const skillName of Object.keys(skillFunctions)) {
+        const lowerSkillName = skillName.toLowerCase();
+        if (lowerSkillName.startsWith(commandName)) {
+            const matchLength = lowerSkillName.length - commandName.length;
+            if (matchLength < closestMatchLength) {
+                closestMatch = skillName;
+                closestMatchLength = matchLength;
+            }
+        }
+    }
+
+    // Execute the matched skill function, if any
+    if (closestMatch) {
+        try {
+            console.log(`INFO: Command: ${closestMatch}(${args.join(', ')})`);
+            // Convert arguments to required types. Example: parseInt for numbers
+            // Assuming all skills accept 'bot' as their first parameter and then the arguments
+            const result = await skillFunctions[closestMatch](bot, ...args.map(arg => isNaN(arg) ? arg : parseInt(arg)));
+            console.log(`INFO: Command result: ${JSON.stringify(result)}`);
+        } catch (error) {
+            console.error(`Error executing command: ${error.stack}`);
+        }
+    } else {
+        console.log(`INFO: No matching skill found for command: ${command}`);
+    }
 }
 
 async function handleError(error) {

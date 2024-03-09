@@ -1,4 +1,6 @@
-// queryInventory.js located in ./skills
+// queryInventory.js located in ./skills/inventory
+
+const { returnSkillSuccess } = require('../../utils.js');
 
 function queryInventory(bot) {
     // Initialize an object to hold the summary
@@ -15,10 +17,8 @@ function queryInventory(bot) {
             summary[item.name] = item.count;
         }
     });
-  
-    // Log the summary to the console and return
-    console.log(`Inventory: ${JSON.stringify(summary, null, 2)}`);
-    return summary;
+    
+    return returnSkillSuccess({ summary });
 }
 
 module.exports = {

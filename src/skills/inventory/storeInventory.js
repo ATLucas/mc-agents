@@ -1,7 +1,8 @@
-// storeInventory.js located in ./skills
+// storeInventory.js located in ./skills/inventory
 
-const { goNear } = require('./goNear');
+const { goNear } = require('../navigation/goNear.js');
 const Vec3 = require('vec3');
+const { returnSkillError, returnSkillSuccess } = require('../../utils.js');
 
 async function storeInventory(bot) {
     // Find the nearest chest within a specified radius
@@ -13,9 +14,7 @@ async function storeInventory(bot) {
     });
 
     if (!chestBlock) {
-        const errMsg = "No chest found within range.";
-        console.log(`INFO: ${errMsg}`);
-        return {success: false, error: errMsg};
+        return returnSkillError("No chest found within range.");
     }
 
     // Convert the chest block position to Vec3 for goNear
@@ -37,9 +36,8 @@ async function storeInventory(bot) {
             // Attempt to close the chest before exiting the function due to an error
             await chest.close();
 
-            const errMsg = `Failed to deposit ${item.name}: ${err.message}`;
-            console.error(`ERROR: ${errMsg}`);
-            return {success: false, error: errMsg};
+            console.error(err.stack);
+            return returnSkillError(`Failed to deposit ${item.name}: ${err.message}`);
         }
     }
 
@@ -57,7 +55,7 @@ async function storeInventory(bot) {
     await chest.close();
     console.log("INFO: Chest closed.");
 
-    return { success: true, chestContents: chestContents };
+    return returnSkillSuccess({ chestContents });
 }
 
 module.exports = {
