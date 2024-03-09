@@ -9,7 +9,7 @@ const { teleportToWaypoint } = require('../skills/navigation/teleportToWaypoint.
 const { setWaypoint } = require('../skills/waypoints/setWaypoint.js');
 
 async function onBotSpawn(bot) {
-    console.log(`@${bot.username} has spawned.`);
+    console.log(`Bot spawned: bot=${bot.username}`);
 
     // Mineflayer setup
     bot.loadPlugin(pathfinder);

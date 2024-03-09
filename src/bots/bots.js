@@ -1,14 +1,15 @@
 // bots.js located in ./bots
 
 const mineflayer = require('mineflayer');
-const { onBotChat } = require('./chat.js');
-const { onBotSpawn } = require('./spawn.js');
+const { botConfig } = require('../config.js');
 
 const botRegistry = {};
 
-async function spawnBot(botConfig) {
+// TODO: async function spawnAllBots(onBotSpawn, onBotChat) // NOTE: If none exist, spawn the world bot
+
+async function spawnBot(botName, onBotSpawn, onBotChat) {
     try {
-        const bot = mineflayer.createBot(botConfig);
+        const bot = mineflayer.createBot({username: botName, ...botConfig});
 
         bot.on('spawn', async () => {
             try {
@@ -26,15 +27,19 @@ async function spawnBot(botConfig) {
             }
         });
 
-        botRegistry[botConfig.username] = bot;
+        botRegistry[botName] = bot;
     } catch (error) {
         console.error(error.message, error.stack);
     }
 }
 
-async function getBot(botName) {
+function getBot(botName) {
     return botRegistry[botName];
 }
+
+// TODO: async function despawnBot(botName)
+
+// TODO: async function deleteBot(botName)
 
 module.exports = {
     spawnBot,

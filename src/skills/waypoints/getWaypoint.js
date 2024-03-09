@@ -1,8 +1,7 @@
 // getWaypoint.js located in ./skills/waypoints
 
-const fs = require('fs');
 const path = require('path');
-const { returnSkillError, returnSkillSuccess } = require('../../utils.js');
+const { returnSkillError, returnSkillSuccess, readJsonFile } = require('../../utils.js');
 
 const waypointsFilePath = path.join(__dirname, '..', '..', 'data', 'waypoints.json');
 
@@ -14,7 +13,7 @@ async function getWaypoint(bot, waypointName) {
 
     let waypoints;
     try {
-        waypoints = JSON.parse(fs.readFileSync(waypointsFilePath, { encoding: 'utf8' }));
+        waypoints = readJsonFile(waypointsFilePath);
     } catch (error) {
         if (error.code === 'ENOENT') {
             return returnSkillError('No waypoints found.'); // File not found means no waypoints exist

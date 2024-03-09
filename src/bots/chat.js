@@ -1,10 +1,10 @@
 // chat.js located in ./bots
 
-const { spawnBot, getBot } = require('./bots.js');
-const { botConfig } = require('../config.js');
-const { resetGPTThread, performGPTCommand } = require('./gpt.js');
 const { isAlphanumeric, isWorldBot } = require('../utils.js');
+const { spawnBot, getBot } = require('./bots.js');
 const { performSlashCommand } = require('./commands.js');
+const { resetGPTThread, performGPTCommand } = require('./gpt.js');
+const { onBotSpawn } = require('./spawn.js');
 
 async function onBotChat(bot, username, message) {
 
@@ -31,12 +31,12 @@ async function onBotChat(bot, username, message) {
                 console.error(`Bot name must be alphanumeric: ${botName}`);
                 return;
             }
-            if (getBot(botName)) {
-                console.error(`Bot already exists: ${botName}`);
+            const bot = getBot(botName)
+            if (bot) {
+                console.error(`Bot already exists: botName=${botName}, bot=${bot}`);
                 return;
             }
-            const newBotConfig = { username: botName, ...botConfig };
-            await spawnBot(newBotConfig);
+            await spawnBot(botName, onBotSpawn, onBotChat);
             return;
         }
 

@@ -1,8 +1,7 @@
 // writeBotData.js located in ./skills/bots
 
-const fs = require('fs');
 const path = require('path');
-const { returnSkillError, returnSkillSuccess } = require('../../utils.js');
+const { returnSkillError, returnSkillSuccess, fileExists, readJsonFile, writeJsonFile } = require('../../utils.js');
 
 async function writeBotData(bot, data) {
 
@@ -12,20 +11,14 @@ async function writeBotData(bot, data) {
     let oldBotData;
     try {
         // Read existing data from the bot's file, or start with an empty object if the file doesn't exist
-        oldBotData = fs.existsSync(botDataFilePath) ?
-            JSON.parse(fs.readFileSync(botDataFilePath, { encoding: 'utf8' })) :
-            {};
+        oldBotData = fileExists(botDataFilePath) ? readJsonFile(botDataFilePath) : {};
     } catch (error) {
         console.error(error.stack);
         return returnSkillError(`Failed to read bot data file: ${error.message}`);
     }
 
     // Save the updated data back to the bot's data file
-    fs.writeFileSync(
-        botDataFilePath,
-        JSON.stringify({...oldBotData, ...data}, null, 2),
-        { encoding: 'utf8' }
-    );
+    writeJsonFile(botDataFilePath, {...oldBotData, ...data});
 
     return returnSkillSuccess();
 }

@@ -1,9 +1,8 @@
 // setWaypoint.js located in ./skills/waypoints
 
-const fs = require('fs');
 const path = require('path');
 const { waypointTypes } = require('../../config.js');
-const { getPlayer, returnSkillError, returnSkillSuccess } = require('../../utils.js');
+const { getPlayer, returnSkillError, returnSkillSuccess, readJsonFile, writeJsonFile } = require('../../utils.js');
 
 const waypointsFilePath = path.join(__dirname, '..', '..', 'data', 'waypoints.json');
 
@@ -30,7 +29,7 @@ async function setWaypoint(bot, waypointType, waypointName) {
     // Read the existing waypoints or start with an empty object
     let waypoints;
     try {
-        waypoints = JSON.parse(fs.readFileSync(waypointsFilePath, { encoding: 'utf8' }));
+        waypoints = readJsonFile(waypointsFilePath);
     } catch (error) {
         if (error.code === 'ENOENT') { // No such file or directory
             waypoints = {}; // Start with an empty object if file does not exist
@@ -55,7 +54,7 @@ async function setWaypoint(bot, waypointType, waypointName) {
 
     // Add and save the new waypoint
     waypoints[waypointName] = newWaypoint;
-    fs.writeFileSync(waypointsFilePath, JSON.stringify(waypoints, null, 2), { encoding: 'utf8' });
+    writeJsonFile(waypointsFilePath, waypoints);
 
     return returnSkillSuccess();
 }

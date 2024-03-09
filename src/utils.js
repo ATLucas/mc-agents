@@ -1,5 +1,7 @@
 // utils.js located in ./
 
+const fs = require('fs');
+const path = require('path');
 const { playerName, worldBotUsername } = require('./config.js');
 
 function getPlayer(bot) {
@@ -26,6 +28,24 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+function fileExists(filePath) {
+    return fs.existsSync(filePath);
+}
+
+function readJsonFile(filePath) {
+    return JSON.parse(fs.readFileSync(filePath, { encoding: 'utf8' }));
+}
+
+function writeJsonFile(filePath, content) {
+    const directoryPath = path.dirname(filePath);
+
+    if (!fs.existsSync(directoryPath)) {
+        fs.mkdirSync(directoryPath, { recursive: true });
+    }
+
+    fs.writeFileSync(filePath, JSON.stringify(content, null, 2), { encoding: 'utf8' });
+}
+
 module.exports = {
     getPlayer,
     isAlphanumeric,
@@ -33,4 +53,7 @@ module.exports = {
     returnSkillError,
     returnSkillSuccess,
     sleep,
+    fileExists,
+    readJsonFile,
+    writeJsonFile,
 };

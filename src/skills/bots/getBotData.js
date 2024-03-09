@@ -1,8 +1,7 @@
 // getBotData.js located in ./skills/bots
 
-const fs = require('fs');
 const path = require('path');
-const { returnSkillError, returnSkillSuccess } = require('../../utils.js');
+const { returnSkillError, returnSkillSuccess, fileExists, readJsonFile } = require('../../utils.js');
 
 async function getBotData(bot) {
     // Define the path for the bot-specific data file
@@ -11,12 +10,12 @@ async function getBotData(bot) {
     let botData;
     try {
         // Ensure the bot's data file exists
-        if (!fs.existsSync(botDataFilePath)) {
+        if (!fileExists(botDataFilePath)) {
             return returnSkillError('No bot data found.');
         }
 
         // Read existing data from the bot's file
-        botData = JSON.parse(fs.readFileSync(botDataFilePath, { encoding: 'utf8' }));
+        botData = readJsonFile(botDataFilePath);
     } catch (error) {
         console.error(error.stack);
         return returnSkillError(`Failed to read bot data file: ${error.message}`);

@@ -25,8 +25,8 @@ async function createGPTAssistant(bot, botData) {
 
     console.log(`INFO: Creating GPT: bot=${bot.username}`);
 
-    const instrPath = path.join(__dirname, 'gpt/instructions.md');
-    const toolsPath = path.join(__dirname, 'gpt/tools.json');
+    const instrPath = path.join(__dirname, "../gpt/instructions.md");
+    const toolsPath = path.join(__dirname, "../gpt/tools.json");
 
     let instructions;
     let toolsData;
