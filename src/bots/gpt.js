@@ -1,11 +1,11 @@
-// gpt.js located in ./
+// gpt.js located in ./bots
 
 const fs = require('fs');
 const path = require('path');
 const OpenAI = require('openai');
-const { skillFunctions } = require('./skills.js');
-const { sleep } = require('./utils.js');
-const { writeBotData } = require('./skills/bots/writeBotData.js');
+const { skillFunctions } = require('../skills.js');
+const { sleep } = require('../utils.js');
+const { writeBotData } = require('../skills/bots/writeBotData.js');
 
 const openai = new OpenAI();
 
