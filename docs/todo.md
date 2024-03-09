@@ -23,10 +23,6 @@
         - waypoint skills
         - Skill to teleport player to a given waypoint?
 
-- Bugs in block placement for the leveling
-    - Need some way to get closer to the placement square, like go look at the reference block face
-    - Jump placement is a possibility, but not a great one
-
 - Wood foraging expedition
     - Spiral exploration
     - Chop down trees
