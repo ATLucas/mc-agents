@@ -2,9 +2,15 @@
 
 const mineflayer = require('mineflayer');
 const { pathfinder, Movements } = require('mineflayer-pathfinder');
-const { BOT_CONFIG, START_POINT } = require('./config.js');
-const { skillFunctions } = require('./skills.js');
+
+const { botConfig, worldBotUsername } = require('./config.js');
 const { createGPTAssistant, deleteGPTAssistant, performGPTCommand } = require('./gpt.js');
+const { skillFunctions } = require('./skills.js');
+const { getBotData } = require('./skills/bots/getBotData.js');
+const { setSpawn } = require('./skills/bots/setSpawn.js');
+const { teleportToWaypoint } = require('./skills/navigation/teleportToWaypoint.js');
+const { setWaypoint } = require('./skills/waypoints/setWaypoint.js');
+const { isWorldBot } = require('./utils.js');
 
 const botRegistry = {};
 
@@ -37,28 +43,54 @@ async function createBot(botConfig) {
 async function onBotSpawn(bot) {
     console.log(`@${bot.username} has spawned.`);
 
-    // Create a GPT for this bot
-    await createGPTAssistant(bot);
-
-    // Pathfinder setup
+    // Mineflayer setup
     bot.loadPlugin(pathfinder);
     const defaultMove = new Movements(bot, require('minecraft-data')(bot.version));
     bot.pathfinder.setMovements(defaultMove);
-
-    // MC Data setup
     bot.mcData = require('minecraft-data')(bot.version);
 
-    // Teleport to starting location
-    console.log(`INFO: Teleporting to (x=${START_POINT.x}, y=${START_POINT.y}, z=${START_POINT.z})`);
-    bot.chat(`/tp ${START_POINT.x} ${START_POINT.y} ${START_POINT.z}`);
+    // Bot data
+    let result = await getBotData(bot);
+
+    if (!result.success) {
+        // First time this bot has spawned (no data yet)
+        if (isWorldBot(bot)) {
+            // Create the default spawn waypoint for new bots
+            // using the player's current position
+            result = await setWaypoint(bot, "spawn", "defaultSpawn");
+
+            if (!result.success) {
+                console.error(`Failed to create the default spawn waypoint: ${JSON.stringify(result)}`);
+                return;
+            }
+        }
+
+        // Set spawn for the bot to the default
+        result = await setSpawn(bot, "defaultSpawn");
+
+        if (!result.success) {
+            console.error(`Failed to set world bot's spawn to the default: ${JSON.stringify(result)}`);
+            return;
+        }
+    }
+
+    result = await getBotData(bot);
+
+    if (!result.success) {
+        console.error(`Failed to get bot data: ${JSON.stringify(result)}`);
+        return;
+    }
+
+    // Create a GPT for this bot
+    await createGPTAssistant(bot);
+
+    await teleportToWaypoint(bot, result.botData.spawnWaypoint);
 }
 
 async function onBotChat(bot, username, message) {
 
-    const isWorldBot = bot.username == BOT_CONFIG["username"];
-
     let regex = null;
-    if (message.startsWith("@ ") && isWorldBot) {
+    if (message.startsWith("@ ") && isWorldBot(bot)) {
         regex = new RegExp(`^@`, 'i');
     } else if(message.toLowerCase().startsWith(`@${bot.username.toLowerCase()}`)) {
         regex = new RegExp(`^@${bot.username}`, 'i');
@@ -74,13 +106,13 @@ async function onBotChat(bot, username, message) {
     if (command.startsWith('/')) {
 
         // Check for spawn command
-        if (isWorldBot && command.startsWith("/spawn")) {
+        if (isWorldBot(bot) && command.startsWith("/spawn")) {
             const [_, botName] = command.split(' ');
             if (botRegistry[botName]) {
                 console.log(`Bot ${botName} already exists.`);
                 return;
             }
-            const newBotConfig = { ...BOT_CONFIG, username: botName };
+            const newBotConfig = { username: botName, ...botConfig };
             botRegistry[botName] = await createBot(newBotConfig);
             return;
         }
@@ -166,7 +198,7 @@ process.on('SIGINT', async () => {
     process.exit();
 });
 
-// Initialize the bot
+// Spawn the world bot
 (async () => {
-    botRegistry[BOT_CONFIG["username"]] = await createBot(BOT_CONFIG);
+    botRegistry[worldBotUsername] = await createBot({username: worldBotUsername, ...botConfig});
 })();

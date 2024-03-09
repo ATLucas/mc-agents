@@ -1,5 +1,15 @@
 // utils.js located in ./
 
+const { playerName, worldBotUsername } = require('./config.js');
+
+function getPlayer(bot) {
+    return bot.players[playerName]?.entity;
+}
+
+function isWorldBot(bot) {
+    return bot.username == worldBotUsername;
+}
+
 function returnSkillError(errMsg) {
     return {success: false, error: errMsg};
 }
@@ -13,6 +23,8 @@ function sleep(ms) {
 }
 
 module.exports = {
+    getPlayer,
+    isWorldBot,
     returnSkillError,
     returnSkillSuccess,
     sleep,

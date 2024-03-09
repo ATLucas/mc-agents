@@ -1,10 +1,6 @@
 
 - Bot data
-    - Skill to set bot data
-        - Set a bot's "spawn" waypoint
-    - Skill to query bot data
-    - When world bot is spawned and doesn't have a spawn point set, set it to the player's current position
-    - When a new bot is created, can supply a waypoint, else it will be the world bot's spawn waypoint
+    - Always set a new bot's spawn to the player's current position
     - Save GPT assistant and thread IDs in bot data for persistence across runs
         - Remove code to delete the GPT stuff on shutdown
     - When programs start-up, spawn in all the bots to their spawn points

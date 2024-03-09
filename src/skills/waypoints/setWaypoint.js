@@ -2,8 +2,8 @@
 
 const fs = require('fs');
 const path = require('path');
-const { PLAYER_NAME, WAYPOINT_TYPES } = require('../../config.js');
-const { returnSkillError, returnSkillSuccess } = require('../../utils.js');
+const { waypointTypes } = require('../../config.js');
+const { getPlayer, returnSkillError, returnSkillSuccess } = require('../../utils.js');
 
 const waypointsFilePath = path.join(__dirname, '..', '..', 'data', 'waypoints.json');
 
@@ -17,13 +17,13 @@ async function setWaypoint(bot, waypointType, waypointName) {
         return returnSkillError(`Waypoint name not supplied`);
     }
 
-    const player = bot.players[PLAYER_NAME]?.entity;
+    const player = getPlayer(bot);
     if (!player) {
-        return returnSkillError(`Player ${PLAYER_NAME} not found`);
+        return returnSkillError("Player not found");
     }
 
     // Validate the waypoint type
-    if (!WAYPOINT_TYPES.includes(waypointType)) {
+    if (!waypointTypes.includes(waypointType)) {
         return returnSkillError(`Invalid waypoint type '${waypointType}'.`);
     }
 
