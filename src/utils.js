@@ -6,6 +6,10 @@ function getPlayer(bot) {
     return bot.players[playerName]?.entity;
 }
 
+function isAlphanumeric(str) {
+    return /^[a-zA-Z0-9]+$/.test(str);
+}
+
 function isWorldBot(bot) {
     return bot.username == worldBotUsername;
 }
@@ -24,6 +28,7 @@ function sleep(ms) {
 
 module.exports = {
     getPlayer,
+    isAlphanumeric,
     isWorldBot,
     returnSkillError,
     returnSkillSuccess,

@@ -12,7 +12,7 @@ async function teleportToWaypoint(bot, waypointName) {
     // Use the getWaypoint skill to retrieve the waypoint information
     const result = await getWaypoint(bot, waypointName);
     if (!result.success) {
-        return returnSkillError(`Failed to get waypoint '${waypointName}': ${error}`);
+        return returnSkillError(`Waypoint not found: waypointName=${waypointName}, error=${result.error}`);
     }
 
     const waypoint = result.waypoint;

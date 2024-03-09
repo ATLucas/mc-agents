@@ -10,7 +10,7 @@ const { getBotData } = require('./skills/bots/getBotData.js');
 const { setSpawn } = require('./skills/bots/setSpawn.js');
 const { teleportToWaypoint } = require('./skills/navigation/teleportToWaypoint.js');
 const { setWaypoint } = require('./skills/waypoints/setWaypoint.js');
-const { isWorldBot } = require('./utils.js');
+const { isAlphanumeric, isWorldBot } = require('./utils.js');
 
 const botRegistry = {};
 
@@ -54,22 +54,23 @@ async function onBotSpawn(bot) {
 
     if (!result.success) {
         // First time this bot has spawned (no data yet)
-        if (isWorldBot(bot)) {
-            // Create the default spawn waypoint for new bots
-            // using the player's current position
-            result = await setWaypoint(bot, "spawn", "defaultSpawn");
 
-            if (!result.success) {
-                console.error(`Failed to create the default spawn waypoint: ${JSON.stringify(result)}`);
-                return;
-            }
+        const spawnWaypointName = `${bot.username}BotSpawn`;
+        
+        // Create the default spawn waypoint for the new bot
+        // using the player's current position
+        result = await setWaypoint(bot, "spawn", spawnWaypointName);
+
+        if (!result.success) {
+            console.error(`Failed to create spawn waypoint: ${JSON.stringify(result)}`);
+            return;
         }
 
         // Set spawn for the bot to the default
-        result = await setSpawn(bot, "defaultSpawn");
+        result = await setSpawn(bot, spawnWaypointName);
 
         if (!result.success) {
-            console.error(`Failed to set world bot's spawn to the default: ${JSON.stringify(result)}`);
+            console.error(`Failed to set bot's spawn: ${JSON.stringify(result)}`);
             return;
         }
     }
@@ -108,8 +109,12 @@ async function onBotChat(bot, username, message) {
         // Check for spawn command
         if (isWorldBot(bot) && command.startsWith("/spawn")) {
             const [_, botName] = command.split(' ');
+            if (!isAlphanumeric(botName)) {
+                console.error(`Bot name must be alphanumeric: ${botName}`);
+                return;
+            }
             if (botRegistry[botName]) {
-                console.log(`Bot ${botName} already exists.`);
+                console.error(`Bot already exists: ${botName}`);
                 return;
             }
             const newBotConfig = { username: botName, ...botConfig };
@@ -176,14 +181,13 @@ async function performCommand(bot, command) {
 }
 
 async function handleError(error) {
-    console.error(`ERROR: ${error}`);
+    console.error(error.stack);
     await cleanupBots();
-    console.log('INFO: Exiting');
     process.exit(1);
 }
 
 async function cleanupBots() {
-    console.log('INFO: Deleting GPTs before exiting');
+    console.log('INFO: Cleaning up GPTs before exiting');
 
     const deletePromises = Object.keys(botRegistry).map(botName => deleteGPTAssistant(botRegistry[botName]));
     await Promise.all(deletePromises);
@@ -194,7 +198,6 @@ async function cleanupBots() {
 // Modify the SIGINT handler to call cleanupBots
 process.on('SIGINT', async () => {
     await cleanupBots();
-    console.log('INFO: Exiting');
     process.exit();
 });
 

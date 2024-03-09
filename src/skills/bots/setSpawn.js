@@ -3,10 +3,17 @@
 const fs = require('fs');
 const path = require('path');
 const { returnSkillError, returnSkillSuccess } = require('../../utils.js');
+const { getWaypoint } = require('../waypoints/getWaypoint.js');
 
 async function setSpawn(bot, waypointName) {
     if (!waypointName) {
         return returnSkillError('Waypoint name not supplied');
+    }
+
+    // Use the getWaypoint skill to retrieve the waypoint information
+    const result = await getWaypoint(bot, waypointName);
+    if (!result.success) {
+        return returnSkillError(`Waypoint not found: waypointName=${waypointName}, error=${result.error}`);
     }
 
     // Define the path for the bot-specific data file

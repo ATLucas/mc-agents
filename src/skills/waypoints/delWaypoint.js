@@ -30,7 +30,6 @@ async function delWaypoint(bot, waypointName) {
     }
 
     // Delete the waypoint
-    const waypointData = waypoints[waypointName];
     delete waypoints[waypointName];
 
     // Save the updated waypoints back to the file

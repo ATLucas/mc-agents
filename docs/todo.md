@@ -1,8 +1,8 @@
 
 - Bot data
-    - Always set a new bot's spawn to the player's current position
     - Save GPT assistant and thread IDs in bot data for persistence across runs
         - Remove code to delete the GPT stuff on shutdown
+    - Split main.js into files
     - When programs start-up, spawn in all the bots to their spawn points
 
 - Bot types
