@@ -1,7 +1,4 @@
 
-
-- Fix custom GPT instructions
-- World bot skill to teleport player to a given waypoint
 - Different skin for each bot type
 
 - Wood foraging expedition
