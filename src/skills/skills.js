@@ -1,85 +1,48 @@
 // skills.js located in ./skills
 
-// botData
-const { getBotData } = require('./botData/getBotData.js');
-const { setSpawn } = require('./botData/setSpawn.js');
-const { wipeBotMemory } = require('./botData/wipeBotMemory.js');
+const fs = require('fs');
+const path = require('path');
 
-// botSpawn
-const { spawnBot } = require('./botSpawn/spawnBot.js');
-const { despawnBot } = require('./botSpawn/despawnBot.js');
-const { deleteBot } = require('./botSpawn/deleteBot.js');
+const skillsDirectory = path.join(__dirname);
 
-// crafting
-const { craftCraftingTable } = require('./crafting/craftCraftingTable.js');
-const { craftPlanks } = require('./crafting/craftPlanks.js');
-const { craftSticks } = require('./crafting/craftSticks.js');
-const { craftWoodenPickaxe } = require('./crafting/craftWoodenPickaxe.js');
+// This function will load all skills from the files and return an object
+function loadSkills(directory) {
+    const skillFunctions = {};
+    // Read all the subdirectories in the skills directory (each represents a category)
+    const skillCategories = fs.readdirSync(directory, { withFileTypes: true })
+        .filter(dirent => dirent.isDirectory())
+        .map(dirent => dirent.name);
 
-// inventory
-const { queryInventory } = require('./inventory/queryInventory.js');
-const { storeInventory } = require('./inventory/storeInventory.js');
+    // Iterate over each category to load its skills
+    for (const category of skillCategories) {
+        const categoryPath = path.join(directory, category);
+        const skillFiles = fs.readdirSync(categoryPath, { withFileTypes: true })
+            .filter(dirent => dirent.isFile() && dirent.name.endsWith('.js'))
+            .map(dirent => dirent.name);
 
-// mining
-const { harvestGrass } = require('./mining/harvestGrass.js');
-const { harvestTree } = require('./mining/harvestTree.js');
+        // Import each skill function and add it to the skillFunctions object
+        for (const file of skillFiles) {
+            const skillName = path.basename(file, '.js');
+            const skillPath = path.join(categoryPath, file);
+            skillFunctions[skillName] = require(skillPath)[skillName];
+        }
+    }
 
-// navigation
-const { come } = require('./navigation/come.js');
-const { teleportToWaypoint } = require('./navigation/teleportToWaypoint.js');
-
-// terraforming
-const { levelTerrain } = require('./terraforming/levelTerrain.js');
-
-// waypoints
-const { setWaypoint } = require('./waypoints/setWaypoint.js');
-const { delWaypoint } = require('./waypoints/delWaypoint.js');
-const { getWaypoint } = require('./waypoints/getWaypoint.js');
-const { listWaypoints } = require('./waypoints/listWaypoints.js');
-
-async function spawnBotWrapper(_, botName, botType) {
-    await spawnBot(_, botName, botType, skillFunctions);
+    return skillFunctions;
 }
 
-const skillFunctions = {
-    // botData
-    getBotData,
-    setSpawn,
-    wipeBotMemory,
+// Wrapper function for special cases like spawnBot
+async function spawnBotWrapper(_, botName, botType) {
+    await skillFunctions.spawnBot(_, botName, botType);
+}
 
-    // botSpawn
-    "spawnBot": spawnBotWrapper,
-    despawnBot,
-    deleteBot,
+// Load all skill functions
+const skillFunctions = loadSkills(skillsDirectory);
 
-    // crafting
-    craftCraftingTable,
-    craftPlanks,
-    craftSticks,
-    craftWoodenPickaxe,
+// Apply any necessary wrappers or modifications
+skillFunctions.spawnBot = spawnBotWrapper;
 
-    // inventory
-    queryInventory,
-    storeInventory,
-
-    // mining
-    harvestGrass,
-    harvestTree,
-
-    // navigation
-    come,
-    teleportToWaypoint,
-
-    // terraforming
-    levelTerrain,
-
-    // waypoints
-    setWaypoint,
-    delWaypoint,
-    getWaypoint,
-    listWaypoints,
-};
-
+// Export the skill functions
 module.exports = {
     skillFunctions
 };

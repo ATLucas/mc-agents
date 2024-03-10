@@ -1,6 +1,5 @@
 
 
-- Refactor skills.json to eliminate need for listing everything out
 - Fix custom GPT instructions
 - World bot skill to teleport player to a given waypoint
 - Different skin for each bot type
