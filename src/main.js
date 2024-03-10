@@ -2,7 +2,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const { worldBotUsername } = require('./config.js');
+const { BotTypes, worldBotUsername } = require('./config.js');
 const { skillFunctions } = require('./skills/skills.js');
 const { spawnBot } = require('./skills/botSpawn/spawnBot.js');
 
@@ -17,18 +17,18 @@ async function spawnAllBots() {
 
         if (jsonFiles.length === 0) {
             // If no JSON files are found, spawn the world bot
-            await spawnBot(null, worldBotUsername, skillFunctions);
+            await spawnBot(null, worldBotUsername, BotTypes.world, skillFunctions);
             return;
         }
 
         for (const file of jsonFiles) {
             const botName = path.basename(file, '.json');
-            await spawnBot(null, botName, skillFunctions);
+            await spawnBot(null, botName, null, skillFunctions);
         }
     } catch (error) {
         if (error.code === 'ENOENT') {
             // Directory not found, spawn world bot
-            await spawnBot(null, worldBotUsername, skillFunctions);
+            await spawnBot(null, worldBotUsername, BotTypes.world, skillFunctions);
         } else {
             // Log other errors
             console.error(error.message, error.stack);

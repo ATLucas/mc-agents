@@ -1,29 +1,14 @@
 
-- Bot types
-    - Types
-        - world
-            - set waypoints
-            - spawn bots
-        - terraformer
-        - lumberjack
-        - miner
-        - wheat farmer
-        - baker
-        - smith
-    - Assign types when bot is created
-    - Choose available skills based on bot type
-    - Really need skins for each type of bot
 
-    - World bot
-        - spawn skills
-        - waypoint skills
-        - Skill to teleport player to a given waypoint?
+- Refactor skills.json to eliminate need for listing everything out
+- Fix custom GPT instructions
+- World bot skill to teleport player to a given waypoint
+- Different skin for each bot type
 
 - Wood foraging expedition
     - Spiral exploration
     - Chop down trees
     - Continue until you have enough wood (pickaxe and some extra planks)
-    - Optionally wait for saplings to drop
     - Return to base and deposit materials
 
 - Builder Skill: Upgrade base to level 1

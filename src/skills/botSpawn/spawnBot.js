@@ -1,23 +1,31 @@
 // spawnBot.js located in ./skills/botSpawn
 
 const mineflayer = require('mineflayer');
-const { botConfig } = require('../../config.js');
+const { botConfig, BotTypes } = require('../../config.js');
 const { onChat } = require('../../bots/onChat.js');
 const { onSpawn } = require('../../bots/onSpawn.js');
 const { registerBot } = require('../../bots/registry.js');
 const { isAlphanumeric, returnSkillError, returnSkillSuccess } = require('../../utils/utils.js');
 
-async function spawnBot(_, botName, skillFunctions) {
+async function spawnBot(_, botName, botType, skillFunctions) {
     try {
+        if (!botName) {
+            return returnSkillError("Bot name not specified");
+        }
+        
         if (!isAlphanumeric(botName)) {
             return returnSkillError(`Bot name is not alphanumeric: bot=${botName}`);
+        }
+
+        if (botType && !(botType in BotTypes)) {
+            return returnSkillError(`Bot type invalid. Options: ${JSON.stringify(Object.keys(BotTypes))}`);
         }
 
         const bot = mineflayer.createBot({username: botName, ...botConfig});
 
         bot.on('spawn', async () => {
             try {
-                await onSpawn(bot);
+                await onSpawn(bot, botType);
             } catch (error) {
                 console.error(error.message, error.stack);
             }

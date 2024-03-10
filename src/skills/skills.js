@@ -37,8 +37,8 @@ const { delWaypoint } = require('./waypoints/delWaypoint.js');
 const { getWaypoint } = require('./waypoints/getWaypoint.js');
 const { listWaypoints } = require('./waypoints/listWaypoints.js');
 
-async function spawnBotWrapper(_, botName) {
-    await spawnBot(_, botName, skillFunctions);
+async function spawnBotWrapper(_, botName, botType) {
+    await spawnBot(_, botName, botType, skillFunctions);
 }
 
 const skillFunctions = {

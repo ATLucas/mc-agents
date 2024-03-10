@@ -1,0 +1,189 @@
+# botData
+
+getBotData:
+  description: Get data associated with this bot, including type, spawn waypoint, and other fields.
+  parameters:
+    properties:
+    required:
+
+wipeBotMemory:
+  description: Delete the GPT memory for this bot so it won't remember any past actions.
+  parameters:
+    properties:
+    required:
+
+setSpawn:
+  description: Set the spawn waypoint for a bot.
+  parameters:
+    properties:
+      waypointName:
+        type: string
+        description: Spawn waypoint
+    required:
+    - waypointName
+
+# botSpawn
+
+spawnBot:
+  description: Spawn a bot into the world
+  parameters:
+    properties:
+      botName:
+        type: string
+        description: Name of bot to spawn
+      botType:
+        type: string
+        description: Type of bot to spawn
+    required:
+    - botName
+    - botType
+
+despawnBot:
+  description: Despawn a bot out of the world
+  parameters:
+    properties:
+      botName:
+        type: string
+        description: Name of bot to spawn
+    required:
+    - botName
+
+deleteBot:
+  description: Despawn a bot out of the world and delete all its data
+  parameters:
+    properties:
+      botName:
+        type: string
+        description: Name of bot to spawn
+    required:
+    - botName
+
+# crafting
+
+craftCraftingTable:
+  description: Craft a crafting table.
+  parameters:
+    properties:
+    required:
+
+craftPlanks:
+  description: Craft a certain number of wooden planks.
+  parameters:
+    properties:
+      count:
+        type: number
+        description: Count of planks to craft (default=4)
+    required:
+
+craftSticks:
+  description: Craft a certain number of sticks.
+  parameters:
+    properties:
+      count:
+        type: number
+        description: Count of sticks to craft (default=4)
+    required:
+
+craftWoodenPickaxe:
+  description: Craft a wooden pickaxe.
+  parameters:
+    properties:
+    required:
+
+# inventory
+
+queryInventory:
+  description: Summarize your inventory.
+  parameters:
+    properties:
+    required:
+
+storeInventory:
+  description: Find the nearest chest, go to it, and store all inventory items in the chest.
+  parameters:
+    properties:
+    required:
+
+# mining
+
+harvestGrass:
+  description: Harvest all the short and tall grass within a certain radius.
+  parameters:
+    properties:
+      radius:
+        type: number
+        description: Radius to harvest (default=4)
+    required:
+
+harvestTree:
+  description: Find the closest tree, go to it, and harvest its wood.
+  parameters:
+    properties:
+    required:
+
+# navigation
+
+come:
+  description: Come near the player.
+  parameters:
+    properties:
+    required:
+
+teleportToWaypoint:
+  description: Teleport to the specified waypoint.
+  parameters:
+    properties:
+      waypointName:
+        type: string
+        description: Name of waypoint to teleport to
+    required:
+    - waypointName
+
+# terraforming
+
+levelTerrain:
+  description: Level all the dirt in a certain radius. Helpful for prepping to build.
+  parameters:
+    properties:
+      radius:
+        type: number
+        description: Radius to harvest (default=4)
+    required:
+
+# waypoints
+
+setWaypoint:
+  description: Create a waypoint at the human player's current position.
+  parameters:
+    properties:
+      waypointName:
+        type: string
+        description: Name of waypoint to create
+    required:
+    - waypointName
+
+getWaypoint:
+  description: Get data for an existing waypoint.
+  parameters:
+    properties:
+      waypointName:
+        type: string
+        description: Name of waypoint to get
+    required:
+    - waypointName
+
+delWaypoint:
+  description: Delete an existing waypoint.
+  parameters:
+    properties:
+      waypointName:
+        type: string
+        description: Name of waypoint to delete
+    required:
+    - waypointName
+
+listWaypoints:
+  description: List all waypoints.
+  parameters:
+    properties:
+    required:

@@ -5,7 +5,7 @@ const { returnSkillError, returnSkillSuccess, readJsonFile } = require('../../ut
 
 const waypointsFilePath = path.join(__dirname, '..', '..', 'data', 'waypoints.json');
 
-async function getWaypoint(bot, waypointName) {
+async function getWaypoint(_, waypointName) {
 
     if (!waypointName) {
         return returnSkillError(`Waypoint name not supplied`);

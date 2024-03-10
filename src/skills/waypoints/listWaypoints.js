@@ -5,7 +5,7 @@ const { returnSkillError, returnSkillSuccess, readJsonFile } = require('../../ut
 
 const waypointsFilePath = path.join(__dirname, '..', '..', 'data', 'waypoints.json');
 
-async function listWaypoints(bot) {
+async function listWaypoints(_) {
     let waypoints;
     try {
         waypoints = readJsonFile(waypointsFilePath);

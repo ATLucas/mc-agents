@@ -2,7 +2,11 @@
 
 const fs = require('fs');
 const path = require('path');
+const yaml = require('js-yaml');
+
 const OpenAI = require('openai');
+
+const { BotTypes, getBotSkills } = require('../config.js');
 const { sleep } = require('../utils/utils.js');
 const { writeBotData } = require('../skills/botData/writeBotData.js');
 
@@ -25,15 +29,22 @@ async function createGPTAssistant(bot, botData) {
     console.log(`INFO: Creating GPT: bot=${bot.username}`);
 
     const instrPath = path.join(__dirname, "../gpt/instructions.md");
-    const toolsPath = path.join(__dirname, "../gpt/tools.json");
+    const toolsPath = path.join(__dirname, "../gpt/skills.yaml");
 
     let instructions;
-    let toolsData;
+    let tools;
     
     try {
         instructions = fs.readFileSync(instrPath, 'utf8');
-        const rawToolsData = fs.readFileSync(toolsPath, 'utf8');
-        toolsData = JSON.parse(rawToolsData);
+        const rawSkillsData = fs.readFileSync(toolsPath, 'utf8');
+        try {
+            const allSkillsData = yaml.load(rawSkillsData);
+            const botSkills = [...getBotSkills(BotTypes.common), ...getBotSkills(bot.botType)];
+            tools = _convertSkillsToTools(allSkillsData, botSkills);
+        } catch (error) {
+            console.error('Error parsing skills YAML', error.message, error.stack);
+            return;
+        }
     } catch (error) {
         console.error('Error reading files:', error.message, error.stack);
         return;
@@ -42,8 +53,8 @@ async function createGPTAssistant(bot, botData) {
     try {
         bot.gptAssistant = (await openai.beta.assistants.create({
             name: bot.username,
-            instructions: instructions,
-            tools: toolsData["tools"],
+            instructions,
+            tools,
             model: "gpt-4-turbo-preview"
         })).id;
 
@@ -119,7 +130,7 @@ async function performGPTCommand(bot, command, skillFunctions) {
 
         if (run.status == "requires_action") {
             const toolOutputs = await _handleToolCalls(
-                bot, run.required_action.submit_tool_outputs.tool_calls
+                bot, run.required_action.submit_tool_outputs.tool_calls, skillFunctions
             );
 
             run = await openai.beta.threads.runs.submitToolOutputs(
@@ -132,7 +143,7 @@ async function performGPTCommand(bot, command, skillFunctions) {
     return threadMessages.data[0].content[0].text.value;
 }
 
-async function _handleToolCalls(bot, toolCalls) {
+async function _handleToolCalls(bot, toolCalls, skillFunctions) {
 
     const toolOutputs = [];
 
@@ -151,6 +162,30 @@ async function _handleToolCalls(bot, toolCalls) {
     }
 
     return toolOutputs;
+}
+
+function _convertSkillsToTools(allSkillsData, botSkills) {
+    botSkills = new Set(botSkills);
+    const tools = [];
+
+    for (const [functionName, functionData] of Object.entries(allSkillsData)) {
+        if (botSkills.has(functionName)) {
+            tools.push({
+                type: "function",
+                function: {
+                    name: functionName,
+                    description: functionData.description,
+                    parameters: {
+                        type: "object",
+                        properties: functionData.parameters.properties || {},
+                        required: functionData.parameters.required || []
+                    }
+                }
+            });
+        }
+    }
+
+    return tools;
 }
 
 module.exports = {

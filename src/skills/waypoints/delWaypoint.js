@@ -5,7 +5,7 @@ const { returnSkillError, returnSkillSuccess, readJsonFile, writeJsonFile } = re
 
 const waypointsFilePath = path.join(__dirname, '..', '..', 'data', 'waypoints.json');
 
-async function delWaypoint(bot, waypointName) {
+async function delWaypoint(_, waypointName) {
 
     if (!waypointName) {
         return returnSkillError(`Waypoint name not supplied`);

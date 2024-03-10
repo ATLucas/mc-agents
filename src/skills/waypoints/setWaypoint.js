@@ -1,16 +1,11 @@
 // setWaypoint.js located in ./skills/waypoints
 
 const path = require('path');
-const { waypointTypes } = require('../../config.js');
 const { getPlayer, returnSkillError, returnSkillSuccess, readJsonFile, writeJsonFile } = require('../../utils/utils.js');
 
 const waypointsFilePath = path.join(__dirname, '..', '..', 'data', 'waypoints.json');
 
-async function setWaypoint(bot, waypointType, waypointName) {
-
-    if (!waypointType) {
-        return returnSkillError(`Waypoint type not supplied`);
-    }
+async function setWaypoint(bot, waypointName) {
 
     if (!waypointName) {
         return returnSkillError(`Waypoint name not supplied`);
@@ -19,11 +14,6 @@ async function setWaypoint(bot, waypointType, waypointName) {
     const player = getPlayer(bot);
     if (!player) {
         return returnSkillError("Player not found");
-    }
-
-    // Validate the waypoint type
-    if (!waypointTypes.includes(waypointType)) {
-        return returnSkillError(`Invalid waypoint type '${waypointType}'.`);
     }
 
     // Read the existing waypoints or start with an empty object
@@ -49,7 +39,6 @@ async function setWaypoint(bot, waypointType, waypointName) {
         x: player.position.x.toFixed(2),
         y: player.position.y.toFixed(2),
         z: player.position.z.toFixed(2),
-        type: waypointType
     };
 
     // Add and save the new waypoint

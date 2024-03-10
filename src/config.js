@@ -10,13 +10,30 @@ const botConfig = {
     viewDistance: "tiny",
 };
 
-const worldBotUsername = "world";
+const BotTypes = {
+	common: "common",
+	world: "world",
+	craftsman: "craftsman",
+	woodsman: "woodsman",
+}
 
-const waypointTypes = ['spawn', 'base', 'mine', 'tree_farm', 'wheat_farm'];
+const _botSkillsByType = {
+    common: ["getBotData", "wipeBotMemory", "setSpawn", "come", "teleportToWaypoint", "queryInventory", "storeInventory"],
+    world: ["spawnBot", "despawnBot", "deleteBot", "listWaypoints", "setWaypoint", "getWaypoint", "delWaypoint"],
+    craftsman: ["craftCraftingTable", "craftPlanks", "craftSticks", "craftWoodenPickaxe"],
+    woodsman: ["harvestTree", "harvestGrass", "levelTerrain"]
+}
+
+function getBotSkills(botType) {
+    return _botSkillsByType[botType];
+}
+
+const worldBotUsername = "world";
 
 module.exports = {
     playerName,
     botConfig,
-    waypointTypes,
+    BotTypes,
+    getBotSkills,
     worldBotUsername,
 };

@@ -20,7 +20,7 @@ async function onChat(bot, username, message, skillFunctions) {
 
     // Check for command strings
     if (command.startsWith('/')) {
-        await performSlashCommand(bot, command, skillFunctions);
+        await _performSlashCommand(bot, command, skillFunctions);
     } else {
 
         // Send command to GPT
@@ -35,7 +35,7 @@ async function onChat(bot, username, message, skillFunctions) {
     }
 }
 
-async function performSlashCommand(bot, command, skillFunctions) {
+async function _performSlashCommand(bot, command, skillFunctions) {
 
     // Normalize command: remove leading '/' and split by spaces
     const parts = command.slice(1).split(' ');

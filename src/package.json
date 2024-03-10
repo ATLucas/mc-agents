@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "js-yaml": "^4.1.0",
     "minecraft-data": "^3.62.0",
     "mineflayer": "^4.19.0",
     "mineflayer-pathfinder": "^2.4.5",
