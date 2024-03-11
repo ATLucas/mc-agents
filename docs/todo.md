@@ -1,7 +1,5 @@
 
-- Different skin for each bot type
-
-- Wood foraging expedition
+- Wood foraging
     - Spiral exploration
     - Chop down trees
     - Continue until you have enough wood (pickaxe and some extra planks)
