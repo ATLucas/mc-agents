@@ -1,23 +1,39 @@
-const MINECRAFT_HOST = "localhost";
-const MINECRAFT_PORT = "3001";
+const minecraftHost = "localhost";
+const minecraftPort = "3001";
 
-const PLAYER_NAME = "atlucas";
+const playerName = "atlucas";
 
-const BOT_CONFIG = {
-    username: "alpha",
-    address: MINECRAFT_HOST,
-    port: MINECRAFT_PORT,
+const botConfig = {
+    address: minecraftHost,
+    port: minecraftPort,
     version: "1.20.1",
     viewDistance: "tiny",
 };
 
-const START_POINT = { x: 356, y: 64, z: 64 }; // Forest
-// const START_POINT = { x: 256, y: 63, z: 6 }; // Beach
+const BotTypes = {
+	common: "common",
+	world: "world",
+	craftsman: "craftsman",
+	woodsman: "woodsman",
+}
+
+const _botSkillsByType = {
+    common: ["getBotData", "wipeBotMemory", "setSpawn", "come", "teleportToWaypoint", "queryInventory", "storeInventory"],
+    world: ["spawnBot", "despawnBot", "deleteBot", "listWaypoints", "setWaypoint", "getWaypoint", "delWaypoint"],
+    craftsman: ["craftCraftingTable", "craftPlanks", "craftSticks", "craftWoodenPickaxe"],
+    woodsman: ["harvestTree", "harvestGrass", "levelTerrain"]
+}
+
+function getBotSkills(botType) {
+    return _botSkillsByType[botType];
+}
+
+const worldBotUsername = "world";
 
 module.exports = {
-    MINECRAFT_HOST,
-    MINECRAFT_PORT,
-    PLAYER_NAME,
-    BOT_CONFIG,
-    START_POINT,
+    playerName,
+    botConfig,
+    BotTypes,
+    getBotSkills,
+    worldBotUsername,
 };

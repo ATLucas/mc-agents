@@ -1,10 +1,11 @@
-// harvestTree.js located in ./skills
+// harvestTree.js located in ./skills/mining
 
-const { digBlock } = require('./digBlock');
-const { goNear } = require('./goNear');
-const { goTo } = require('./goTo');
-const { queryInventory } = require('./queryInventory');
-const { sleep } = require('../utils.js');
+const { digBlock } = require('./digBlock.js');
+const { goNear } = require('../navigation/goNear.js');
+const { goTo } = require('../navigation/goTo.js');
+const { queryInventory } = require('../inventory/queryInventory.js');
+const { sleep } = require('../../utils/utils.js');
+const { returnSkillError } = require('../../utils/utils.js');
 const Vec3 = require('vec3');
 
 const LOG_BLOCKS = ['oak_log', 'spruce_log', 'birch_log', 'jungle_log', 'acacia_log', 'dark_oak_log'];
@@ -14,8 +15,7 @@ async function harvestTree(bot) {
     // Find the closest tree
     const treeBase = await findClosestTree(bot);
     if (!treeBase) {
-        console.log("INFO: No tree found within range.");
-        return { success: true };
+        return returnSkillError("No tree found within range.");
     }
 
     // Go to the tree
@@ -29,16 +29,11 @@ async function harvestTree(bot) {
     await sleep(1000);
 
     // Collect the dropped logs
-    console.log("INFO: Collecting items")
-    try {
-        for (const item of droppedItems) {
-            await goTo(bot, item.position);
-        }
-    } catch (error) {
-        console.error(`ERROR: Failed to collect all dropped items: ${error}`)
+    for (const item of droppedItems) {
+        await goTo(bot, item.position);
     }
-    console.log("INFO: Done collecting items")
-    return { success: true, inventory: queryInventory(bot) };
+    
+    return queryInventory(bot);
 }
 
 async function findClosestTree(bot) {
@@ -79,21 +74,12 @@ async function harvestAdjacentTreeBlocks(bot, droppedItems, position, visited = 
             visited.add(key);
             const block = bot.blockAt(newPos);
             if (block && LOG_BLOCKS.includes(block.name)) {
-                //console.log(`DEBUG: Tree block found at: ${newPos}`);
-                
-                // Listen for item drop
-                const itemDropCallback = (entity) => {
-                    if (entity.position.distanceTo(block.position) <= 5) {
-                        droppedItems.push(entity);
-                    }
-                };
-                bot.on('itemDrop', itemDropCallback);
-
-                // Dig the block
-                await digBlock(bot, block);
-
-                // Stop listening for item drop
-                bot.removeListener('itemDrop', itemDropCallback)
+                // Harvest the log
+                await goNear(bot, block.position);
+                const result = await digBlock(bot, block);
+                if (result.success && result.droppedItem) {
+                    droppedItems.push(result.droppedItem);
+                }
 
                 // Continue harvesting
                 await harvestAdjacentTreeBlocks(bot, droppedItems, newPos, visited);
