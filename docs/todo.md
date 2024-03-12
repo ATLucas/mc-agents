@@ -1,9 +1,24 @@
 
 - Wood foraging
     - Spiral exploration
+
     - Chop down trees
     - Continue until you have enough wood (pickaxe and some extra planks)
     - Return to base and deposit materials
+
+- Bug: Trees must have leaves
+- Bug: Bot sometimes tries to climb trees to get to log drops rather than breaking blocks
+- Bug: Trees and buildings should be ignored when leveling terrain...only level dirt, sand, stone, and gravel
+- Bug: If bot initially spawns too far from player, they can't find the player
+
+- Resource vein detection
+- Terrain detection
+    - dirt/stone/sand
+    - hill
+    - cave
+    - water
+    - lava
+    - biome boundaries
 
 - Builder Skill: Upgrade base to level 1
     - level a 3x3 area
