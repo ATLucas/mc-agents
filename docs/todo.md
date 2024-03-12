@@ -1,12 +1,15 @@
 
 - Wood foraging
-    - Spiral exploration
+    - Find the surface level before moving (note: don't count leaves as surface, avoid trees)
+    - Don't navigate into an object...ensure there are air blocks
+    - If pathfinding fails, try a different direction
+    - Find trees, not just wood blocks, and return the actual base of the tree (trees must have leaves and multiple logs)
+    - Avoid oceans.. and maybe other water
 
     - Chop down trees
     - Continue until you have enough wood (pickaxe and some extra planks)
     - Return to base and deposit materials
 
-- Bug: Trees must have leaves
 - Bug: Bot sometimes tries to climb trees to get to log drops rather than breaking blocks
 - Bug: Trees and buildings should be ignored when leveling terrain...only level dirt, sand, stone, and gravel
 - Bug: If bot initially spawns too far from player, they can't find the player
