@@ -2,10 +2,11 @@
 
 const Vec3 = require('vec3');
 
+const { findSurfaceLevel } = require('../navigation/findSurfaceLevel.js');
 const { returnSkillError, returnSkillSuccess } = require('../../utils/utils.js');
 
 async function explore(bot, validateBlock, moveCallback, maxDistance = 256, stepSize = 32) {
-    let direction = 0; // 0: North, 1: East, 2: South, 3: West
+    let direction = 2; // 0: North, 1: East, 2: South, 3: West
     let steps = 1;
     let stepCounter = 0;
     let turnCounter = 0;
@@ -38,10 +39,27 @@ async function explore(bot, validateBlock, moveCallback, maxDistance = 256, step
         }
 
         // Move in the current direction by stepSize blocks
+        let previousPos = currentPos.clone();
         currentPos.add(moveVector);
 
-        // Move the bot to the new position
-        await moveCallback(bot, currentPos, 2);
+        // Find surface level for 'y' value
+        let result = await findSurfaceLevel(bot, currentPos.x, currentPos.z, currentPos.y + 16);
+
+        if (!result.success) {
+            currentPos = previousPos;
+            console.info(`Failed to find surface level: ${JSON.stringify(result)}`);
+        } else {
+            // Set y to surface level
+            currentPos.y = result.surfaceY;
+    
+            // Move the bot to the new position
+            result = await moveCallback(bot, currentPos, 2);
+    
+            if (!result.success) {
+                currentPos = previousPos;
+                console.info(`Move failed: ${JSON.stringify(result)}`);
+            }
+        }
 
         stepCounter++;
         if (stepCounter === steps) {

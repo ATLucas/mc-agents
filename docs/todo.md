@@ -1,18 +1,29 @@
 
 - Wood foraging
-    - Find the surface level before moving (note: don't count leaves as surface, avoid trees)
-    - Don't navigate into an object...ensure there are air blocks
-    - If pathfinding fails, try a different direction
+    - Avoid oceans
     - Find trees, not just wood blocks, and return the actual base of the tree (trees must have leaves and multiple logs)
-    - Avoid oceans.. and maybe other water
+    - Optimize to return the base of the tree from the exploration method
+
+    - Explore for other things besides trees
 
     - Chop down trees
     - Continue until you have enough wood (pickaxe and some extra planks)
     - Return to base and deposit materials
 
-- Bug: Bot sometimes tries to climb trees to get to log drops rather than breaking blocks
-- Bug: Trees and buildings should be ignored when leveling terrain...only level dirt, sand, stone, and gravel
+- Builder Skill: Upgrade base to level 1
+    - level a 3x3 area
+    - 3x3 wood floor around anchor
+    - Crafting table
+    - Chest
+
+---
+
+- Bug: Can't set waypoint when far away from world bot
+    - Have the world bot always follow the player...could call him the assistant bot
 - Bug: If bot initially spawns too far from player, they can't find the player
+    - Work-around: respawnBot: Create waypoint, set bot's spawn point, despawn bot, spawn bot
+    - Prevention: Require a waypoint when spawning a bot for the first time, similar to botType (NOTE: Can't do this for world bot)
+- Bug: Bot sometimes tries to climb trees to get to log drops rather than breaking blocks
 
 - Resource vein detection
 - Terrain detection
@@ -22,12 +33,6 @@
     - water
     - lava
     - biome boundaries
-
-- Builder Skill: Upgrade base to level 1
-    - level a 3x3 area
-    - 3x3 wood floor around anchor
-    - Crafting table
-    - Chest
 
 ---
 
