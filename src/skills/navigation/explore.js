@@ -5,7 +5,7 @@ const Vec3 = require('vec3');
 const { findSurfaceLevel } = require('../navigation/findSurfaceLevel.js');
 const { returnSkillError, returnSkillSuccess } = require('../../utils/utils.js');
 
-async function explore(bot, validateBlock, moveCallback, maxDistance = 256, stepSize = 32) {
+async function explore(bot, validateBlock, moveCallback, maxDistance = 256, stepSize = 16) {
     let direction = 2; // 0: North, 1: East, 2: South, 3: West
     let steps = 1;
     let stepCounter = 0;
@@ -46,11 +46,16 @@ async function explore(bot, validateBlock, moveCallback, maxDistance = 256, step
         let result = await findSurfaceLevel(bot, currentPos.x, currentPos.z, currentPos.y + 16);
 
         if (!result.success) {
+            console.info(`Failed to find surface level at (${currentPos}): ${JSON.stringify(result)}`);
             currentPos = previousPos;
-            console.info(`Failed to find surface level: ${JSON.stringify(result)}`);
         } else {
             // Set y to surface level
             currentPos.y = result.surfaceY;
+
+            if (bot.blockAt(currentPos).name.includes('water') && _isWaterArea(bot, currentPos)) {
+                console.info(`Avoiding water at (${currentPos})`);
+                currentPos = previousPos;
+            }
     
             // Move the bot to the new position
             result = await moveCallback(bot, currentPos, 2);
@@ -74,6 +79,26 @@ async function explore(bot, validateBlock, moveCallback, maxDistance = 256, step
     }
     return returnSkillError('No suitable blocks found within range.');
 }
+
+// Check if the area is primarily composed of water-related blocks
+function _isWaterArea(bot, centerPos, radius = 5) {
+    let waterBlocks = 0;
+    let totalBlocks = 0;
+    for (let x = -radius; x <= radius; x++) {
+        for (let z = -radius; z <= radius; z++) {
+            const pos = new Vec3(centerPos.x + x, centerPos.y, centerPos.z + z);
+            const block = bot.blockAt(pos);
+            if (block) {
+                totalBlocks++;
+                if (block.name.includes('water')) {
+                    waterBlocks++;
+                }
+            }
+        }
+    }
+    return (waterBlocks / totalBlocks) > 0.5; // More than half of the blocks are water
+}
+
 
 module.exports = {
     explore
