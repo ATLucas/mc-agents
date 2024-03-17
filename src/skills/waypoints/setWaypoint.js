@@ -11,7 +11,7 @@ async function setWaypoint(bot, waypointName) {
         return returnSkillError(`Waypoint name not supplied`);
     }
 
-    const player = getPlayer(bot);
+    const player = getPlayer();
     if (!player) {
         return returnSkillError("Player not found");
     }

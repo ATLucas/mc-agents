@@ -33,9 +33,9 @@ async function explore(bot, validateBlock, moveCallback, maxDistance = 256, step
         let moveVector;
         switch (direction) {
             case 0: moveVector = new Vec3(0, 0, -stepSize); break;
-            case 1: moveVector = new Vec3(stepSize, 0, 0); break;
+            case 1: moveVector = new Vec3(-stepSize, 0, 0); break;
             case 2: moveVector = new Vec3(0, 0, stepSize); break;
-            case 3: moveVector = new Vec3(-stepSize, 0, 0); break;
+            case 3: moveVector = new Vec3(stepSize, 0, 0); break;
         }
 
         // Move in the current direction by stepSize blocks

@@ -6,7 +6,7 @@ getBotData:
     properties:
     required:
 
-wipeBotMemory:
+resetMemory:
   description: Delete the GPT memory for this bot so it won't remember any past actions.
   parameters:
     properties:
@@ -84,11 +84,15 @@ craftSticks:
         description: Count of sticks to craft (default=4)
     required:
 
-craftWoodenPickaxe:
-  description: Craft a wooden pickaxe.
+craftWoodenTool:
+  description: Craft a wooden tool.
   parameters:
     properties:
+      itemName:
+        type: string
+        description: Name of item to craft (wooden_axe, wooden_pickaxe, wooden_shovel, wooden_sword, wooden_hoe)
     required:
+    - itemName
 
 # inventory
 
