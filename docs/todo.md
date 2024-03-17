@@ -1,8 +1,10 @@
 
 - Wood foraging
-    - Avoid oceans
-    - Find trees, not just wood blocks, and return the actual base of the tree (trees must have leaves and multiple logs)
-    - Optimize to return the base of the tree from the exploration method
+    - Find trees, not just wood blocks, and return the actual base of the tree (trees must have leaves)
+        - Need a way to validate the entire vein
+        - Need a way to find a different vein if one vein is invalid
+        - Update harvestTree to use findVein, filtering only the logs from the vein (or maybe just break the leaves too)
+        - Make sorting configurable, defaulting to asscending by y value
 
     - Explore for other things besides trees
 
