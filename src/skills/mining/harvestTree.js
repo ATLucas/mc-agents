@@ -3,6 +3,7 @@
 const { digBlock } = require('./digBlock.js');
 const { goNear } = require('../navigation/goNear.js');
 const { goTo } = require('../navigation/goTo.js');
+const { explore } = require('../navigation/explore.js');
 const { queryInventory } = require('../inventory/queryInventory.js');
 const { sleep } = require('../../utils/utils.js');
 const { returnSkillError } = require('../../utils/utils.js');
@@ -11,6 +12,15 @@ const Vec3 = require('vec3');
 const LOG_BLOCKS = ['oak_log', 'spruce_log', 'birch_log', 'jungle_log', 'acacia_log', 'dark_oak_log'];
 
 async function harvestTree(bot) {
+
+    // Define tree validation function
+    const isTreeBlock = (block) => LOG_BLOCKS.includes(block.name);
+
+    // Start exploration
+    const result = await explore(bot, isTreeBlock, goNear);
+    if (!result.success) {
+        return returnSkillError('No tree found within exploration range.');
+    }
 
     // Find the closest tree
     const treeBase = await findClosestTree(bot);

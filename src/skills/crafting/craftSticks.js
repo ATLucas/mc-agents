@@ -1,5 +1,6 @@
 // craftSticks.js located in ./skills/crafting
 
+const { queryInventory } = require('../inventory/queryInventory.js');
 const { returnSkillError } = require('../../utils/utils.js');
 
 const STICKS_PER_SET = 4;

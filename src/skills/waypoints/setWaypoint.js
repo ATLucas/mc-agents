@@ -11,7 +11,7 @@ async function setWaypoint(bot, waypointName) {
         return returnSkillError(`Waypoint name not supplied`);
     }
 
-    const player = getPlayer(bot);
+    const player = getPlayer();
     if (!player) {
         return returnSkillError("Player not found");
     }
@@ -36,9 +36,9 @@ async function setWaypoint(bot, waypointName) {
 
     // Capture the bot's current position as the waypoint
     const newWaypoint = {
-        x: player.position.x.toFixed(2),
-        y: player.position.y.toFixed(2),
-        z: player.position.z.toFixed(2),
+        x: Math.floor(player.position.x),
+        y: Math.floor(player.position.y),
+        z: Math.floor(player.position.z),
     };
 
     // Add and save the new waypoint

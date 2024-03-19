@@ -33,7 +33,9 @@ async function craftPlanks(bot, count=PLANKS_PER_SET) {
     }
 
     // Calculate how many sets of planks
-    const craftSets = Math.ceil(count / STICKS_PER_SET);
+    const craftSets = Math.ceil(count / PLANKS_PER_SET);
+
+    console.log(`Crafting ${craftSets} sets of planks.`);
 
     try {
         // Find the recipe for the corresponding planks

@@ -37,9 +37,15 @@ The following guide assumes you are running on a Mac, but most instructions can 
 3. Run the installer
 4. Verify installation by running `node -v`
 
+## OpenAI Setup
+
+Create an API key and put it in an environment variable, as described in the OpenAI quickstart:
+
+https://platform.openai.com/docs/quickstart?context=node
+
 ## Run MC Agents
 
-1. `cd aidev/projects/mc_agents/src`
+1. `cd mc-agents/src`
 2. `node main.js`
 
 ## Tips

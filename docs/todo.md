@@ -1,6 +1,13 @@
 
 - Wood foraging
-    - Spiral exploration
+    - Find trees, not just wood blocks, and return the actual base of the tree (trees must have leaves)
+        - Need a way to validate the entire vein
+        - Need a way to find a different vein if one vein is invalid
+        - Update harvestTree to use findVein, filtering only the logs from the vein (or maybe just break the leaves too)
+        - Make sorting configurable, defaulting to asscending by y value
+
+    - Explore for other things besides trees
+
     - Chop down trees
     - Continue until you have enough wood (pickaxe and some extra planks)
     - Return to base and deposit materials
@@ -10,6 +17,24 @@
     - 3x3 wood floor around anchor
     - Crafting table
     - Chest
+
+---
+
+- Bug: Can't set waypoint when far away from world bot
+    - Have the world bot always follow the player...could call him the assistant bot
+- Bug: If bot initially spawns too far from player, they can't find the player
+    - Work-around: respawnBot: Create waypoint, set bot's spawn point, despawn bot, spawn bot
+    - Prevention: Require a waypoint when spawning a bot for the first time, similar to botType (NOTE: Can't do this for world bot)
+- Bug: Bot sometimes tries to climb trees to get to log drops rather than breaking blocks
+
+- Resource vein detection
+- Terrain detection
+    - dirt/stone/sand
+    - hill
+    - cave
+    - water
+    - lava
+    - biome boundaries
 
 ---
 

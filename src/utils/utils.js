@@ -2,14 +2,19 @@
 
 const fs = require('fs');
 const path = require('path');
+const { getBot } = require('../bots/registry.js');
 const { playerName, worldBotUsername } = require('../config.js');
 
-function getPlayer(bot) {
-    return bot.players[playerName]?.entity;
+function getPlayer() {
+    return getWorldBot().players[playerName]?.entity;
 }
 
 function isAlphanumeric(str) {
     return /^[a-zA-Z0-9]+$/.test(str);
+}
+
+function getWorldBot() {
+    return getBot(worldBotUsername);
 }
 
 function isWorldBot(bot) {
@@ -49,6 +54,7 @@ function writeJsonFile(filePath, content) {
 module.exports = {
     getPlayer,
     isAlphanumeric,
+    getWorldBot,
     isWorldBot,
     returnSkillError,
     returnSkillSuccess,

@@ -33,7 +33,8 @@ function loadSkills(directory) {
 
 // Wrapper function for special cases like spawnBot
 async function spawnBotWrapper(_, botName, botType) {
-    await skillFunctions.spawnBot(_, botName, botType);
+    const { spawnBot } = require('./botSpawn/spawnBot.js');
+    await spawnBot(_, botName, botType, skillFunctions);
 }
 
 // Load all skill functions

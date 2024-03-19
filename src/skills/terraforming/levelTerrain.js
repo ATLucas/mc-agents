@@ -19,11 +19,14 @@ async function levelTerrain(bot, radius=4) {
         const x = botPosition.x + dx;
         const z = botPosition.z + dz;
 
-        // Gather all blocks higher than surface level
+        // Define a whitelist of block names
+        const levelableBlocks = ['dirt', 'grass_block', 'sand', 'stone', 'gravel'];
+
+        // Gather all blocks higher than surface level that are in the whitelist
         const blocksToDig = [];
         for (let y = botY + 5; y >= botY; y--) {
             let block = bot.blockAt(new Vec3(x, y, z));
-            if (block && block.name !== "air") {
+            if (block && levelableBlocks.includes(block.name)) {
                 blocksToDig.push(block);
             }
         }

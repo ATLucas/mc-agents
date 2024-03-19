@@ -20,7 +20,7 @@ const BotTypes = {
 const _botSkillsByType = {
     common: ["getBotData", "wipeBotMemory", "setSpawn", "come", "teleportToWaypoint", "queryInventory", "storeInventory"],
     world: ["spawnBot", "despawnBot", "deleteBot", "listWaypoints", "setWaypoint", "getWaypoint", "delWaypoint"],
-    craftsman: ["craftCraftingTable", "craftPlanks", "craftSticks", "craftWoodenPickaxe"],
+    craftsman: ["craftCraftingTable", "craftPlanks", "craftSticks", "craftWoodenTool"],
     woodsman: ["harvestTree", "harvestGrass", "levelTerrain"]
 }
 
